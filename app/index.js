@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, Pressable } from 'react-native';
+import { Link } from 'expo-router';
 import imageSource from '../assets/homscreen.png';
 
 export default function App() {
@@ -14,11 +15,11 @@ export default function App() {
           & chat with them anytime, anywhere!
         </Text>
       </View>
-      <View style={StyleSheet.buttonContainer}>
+      <Link href='/login' style={StyleSheet.buttonContainer} asChild>
         <Pressable style={styles.button}>
           <Text style={styles.buttonText}>Get Started</Text>
         </Pressable>
-      </View>
+      </Link>
       <StatusBar style="auto" />
     </View>
   );

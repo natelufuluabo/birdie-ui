@@ -1,10 +1,10 @@
 import { StatusBar } from "expo-status-bar";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 
 export default function Login() {
-    retun (
+    return (
         <View>
-            Login page
+            <Text>Login page</Text>
             <StatusBar style="auto" />
         </View>
     );

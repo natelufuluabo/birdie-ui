@@ -3,6 +3,7 @@
     "name": "birdie-ui",
     "slug": "birdie-ui",
     "version": "1.0.0",
+    "scheme": "birdie",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
