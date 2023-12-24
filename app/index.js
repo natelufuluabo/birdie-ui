@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, Pressable } from 'react-native';
-import imageSource from './assets/homscreen.png';
+import imageSource from '../assets/homscreen.png';
 
 export default function App() {
   return (
