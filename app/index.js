@@ -15,7 +15,7 @@ export default function App() {
           & chat with them anytime, anywhere!
         </Text>
       </View>
-      <Link href='/login' style={StyleSheet.buttonContainer} asChild>
+      <Link href='/signup' style={StyleSheet.buttonContainer} asChild>
         <Pressable style={styles.button}>
           <Text style={styles.buttonText}>Get Started</Text>
         </Pressable>
