@@ -6,15 +6,19 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Link } from 'expo-router';
 import imageSource from '../assets/signup.png';
 
+
 export default function Signup() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
     const [isValidEmail, setIsValidEmail] = useState(true);
     const [isValidPassword, setIsValidPassword] = useState(true);
+    const [usernameError,setUsernameError] = useState('');
+    const [emailError,setEmailError] = useState('');
 
     const validateEmail = (text) => {
         // You can use a regular expression for basic email validation
+        if (text === '') setIsValidEmail(false);
         const emailRegex = /\S+@\S+\.\S+/;
         setIsValidEmail(emailRegex.test(text));
         setEmail(text);
@@ -22,17 +26,56 @@ export default function Signup() {
 
     const validatePassword = (text) => {
         // Password must be at least 8 characters, max 14 characters, with a mix of uppercase and lowercase letters, and at least 1 number
+        if (text === '') setIsValidPassword(false);
         const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,14}$/;
         setIsValidPassword(passwordRegex.test(text));
         setPassword(text);
     };
 
-    const handleSignUp = () => {
+    const handleSignUp = async () => {
         // Implement your signup logic here
         // You can access the validated email, password, and username from state
-        console.log('Email:', email);
-        console.log('Password:', password);
-        console.log('Username:', username);
+        if (!email || !password || !username) {
+            setIsValidEmail(false);
+            setIsValidPassword(false);
+            return 
+        }
+        try {
+            const response = await fetch('http://192.168.4.93:3000/users/register', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username,
+                    email,
+                    password,
+                }),
+            });
+    
+            if (!response.ok) {
+                const json = await response.json();
+                if (json.body.message === "The username is already in use by another account.") {
+                    setUsernameError(json.body.message);
+                    setPassword('');
+                    return;
+                }
+                if (json.body.message === "The email address is already in use by another account.") {
+                    setEmailError(json.body.message);
+                    setPassword('');
+                    return;
+                }
+            }
+    
+            const json = await response.json();
+            console.log(json); // Log successful response
+    
+            // You might want to do something with the response, like redirect the user or store a token
+        } catch (error) {
+            console.error('Error during sign-up:', error.message);
+            // Provide user feedback about the error (e.g., show a message)
+        }
     };
     return (
         <SafeAreaView>
@@ -51,6 +94,7 @@ export default function Signup() {
                             placeholder="Username"
                             rightIcon={<Icon name="user" size={24} color="#6C63FF" />}
                             onChangeText={(text) => setUsername(text)}
+                            errorMessage={usernameError}
                         />
                     </View>
                     <View style={styles.inputContainer}>
@@ -59,7 +103,7 @@ export default function Signup() {
                             placeholder="Email"
                             rightIcon={<Icon name="envelope" size={24} color="#6C63FF" />}
                             onChangeText={validateEmail}
-                            errorMessage={isValidEmail ? null : 'Invalid email address'}
+                            errorMessage={isValidEmail ? emailError : 'Invalid email address'}
                         />
                     </View>
                     <View style={styles.inputContainer}>
@@ -69,7 +113,7 @@ export default function Signup() {
                             secureTextEntry
                             rightIcon={<Icon name="lock" size={24} color="#6C63FF" />}
                             onChangeText={validatePassword}
-                            errorMessage={isValidPassword ? null : 'Invalid password'}
+                            errorMessage={isValidPassword ? null : 'Invalid password. Password must: \n - Be at least 8 and at most 14 characters. \n - Contain a mix of uppercase and lowercase letters. \n - Contain at least one digit'}
                         />
                     </View>
                     <Pressable style={styles.button} onPress={handleSignUp}>
