@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     image: {
-        height: 180,
+        height: 200,
         width: '80%'
     },
     textContainer: {

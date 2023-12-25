@@ -74,11 +74,12 @@ const styles = StyleSheet.create({
     },
     image: {
         height: 300,
-        width: '80%'
+        width: '95%'
     },
     headline: {
         fontSize: 18,
-        color: '#6C63FF'
+        color: '#6C63FF',
+        fontWeight: 'bold'
     },
     formContainer: {
         display: 'flex',
