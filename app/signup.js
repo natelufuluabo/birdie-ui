@@ -76,7 +76,7 @@ export default function Signup() {
                         <Text style={styles.buttonText}>Sign Up</Text>
                     </Pressable>
                     <View style={styles.textContainer2}>
-                        <Text>Already have an account</Text>
+                        <Text>Already have an account?</Text>
                         <Link href='/login' asChild>
                             <Text style={styles.linkText}>Sign in</Text>
                         </Link>
