@@ -77,7 +77,7 @@ export default function Signup() {
                     </Pressable>
                     <View style={styles.textContainer2}>
                         <Text>Already have an account</Text>
-                        <Link href='/sigin' asChild>
+                        <Link href='/login' asChild>
                             <Text style={styles.linkText}>Sign in</Text>
                         </Link>
                     </View>
