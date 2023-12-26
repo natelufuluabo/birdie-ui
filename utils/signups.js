@@ -13,7 +13,7 @@ const validatePassword = (text) => {
     return false;
 };
 
-export const validateForm = (formData, errorsObject, setErrorsObject) => {
+export const validateForm = (formData, setErrorsObject) => {
     const { username, email, password } = formData;
     if (!username) {
         setErrorsObject(prevState => ({ 
@@ -39,4 +39,66 @@ export const validateForm = (formData, errorsObject, setErrorsObject) => {
         return false
     }
     return true;
+}
+
+export const sendRequestToServer = async (formData, setErrorsObject, setFormData) => {
+    try {
+        const response = await fetch('http://192.168.4.93:3000/users/register', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: formData.username,
+                email: formData.email,
+                password: formData.password
+            }),
+        });
+
+        if (!response.ok) {
+            const json = await response.json();
+            if (json.message === "The username is already in use by another account.") {
+                setErrorsObject(prevState => ({ 
+                    ...prevState, usernameError: json.message,
+                    emailError: '',
+                    passwordError: ''
+                }));
+                setFormData(prevState => ({
+                    ...prevState, password: '',
+                }));
+                return false;
+            }
+            if (json.message === "The email address is already in use by another account.") {
+                setErrorsObject(prevState => ({ 
+                    ...prevState, usernameError: '',
+                    emailError: json.message,
+                    passwordError: ''
+                }));
+                setFormData(prevState => ({
+                    ...prevState, password: '',
+                }));
+                return false;
+            }
+        }
+
+        setErrorsObject(prevState => ({ 
+            ...prevState, usernameError: '',
+            emailError: '',
+            passwordError: ''
+        }));
+
+        return true;
+
+    } catch (error) {
+        setErrorsObject(prevState => ({ 
+            ...prevState, usernameError: '',
+            emailError: '',
+            passwordError: error.message
+        }));
+        setFormData(prevState => ({
+            ...prevState, password: '',
+        }));
+        return false;
+    }
 }

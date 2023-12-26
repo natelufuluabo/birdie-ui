@@ -5,7 +5,7 @@ import { Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Link } from 'expo-router';
 import imageSource from '../assets/signup.png';
-import { validateForm } from '../utils/signups';
+import { validateForm, sendRequestToServer } from '../utils/signups';
 
 
 export default function Signup() {
@@ -24,64 +24,8 @@ export default function Signup() {
         // Implement your signup logic here
         // You can access the validated email, password, and username from state
         if (!validateForm(formData, errorsObject, setErrorsObject)) return
-        try {
-            const response = await fetch('http://192.168.4.93:3000/users/register', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: formData.username,
-                    email: formData.email,
-                    password: formData.password
-                }),
-            });
-    
-            if (!response.ok) {
-                const json = await response.json();
-                if (json.message === "The username is already in use by another account.") {
-                    setErrorsObject(prevState => ({ 
-                        ...prevState, usernameError: json.message,
-                        emailError: '',
-                        passwordError: ''
-                    }));
-                    setFormData(prevState => ({
-                        ...prevState, password: '',
-                    }));
-                    return;
-                }
-                if (json.message === "The email address is already in use by another account.") {
-                    setErrorsObject(prevState => ({ 
-                        ...prevState, usernameError: '',
-                        emailError: json.message,
-                        passwordError: ''
-                    }));
-                    setFormData(prevState => ({
-                        ...prevState, password: '',
-                    }));
-                    return;
-                }
-            }
-
-            setErrorsObject(prevState => ({ 
-                ...prevState, usernameError: '',
-                emailError: '',
-                passwordError: ''
-            }));
-    
-            const json = await response.json();
-            console.log(json); // Log successful response
-    
-        } catch (error) {
-            setErrorsObject(prevState => ({ 
-                ...prevState, usernameError: '',
-                emailError: '',
-                passwordError: error.message
-            }));
-            setFormData(prevState => ({
-                ...prevState, password: '',
-            }));
+        if (await sendRequestToServer(formData, setErrorsObject, setFormData)) {
+            console.log('success')
         }
     };
     return (
