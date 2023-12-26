@@ -24,44 +24,65 @@ export default function Signup() {
         // Implement your signup logic here
         // You can access the validated email, password, and username from state
         if (!validateForm(formData, errorsObject, setErrorsObject)) return
-        // try {
-        //     const response = await fetch('http://192.168.4.93:3000/users/register', {
-        //         method: 'POST',
-        //         headers: {
-        //             Accept: 'application/json',
-        //             'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify({
-        //             username,
-        //             email,
-        //             password,
-        //         }),
-        //     });
+        try {
+            const response = await fetch('http://192.168.4.93:3000/users/register', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: formData.username,
+                    email: formData.email,
+                    password: formData.password
+                }),
+            });
     
-        //     if (!response.ok) {
-        //         const json = await response.json();
-        //         if (json.message === "The username is already in use by another account.") {
-        //             setUsernameError(json.message);
-        //             setEmailError('');
-        //             setPassword('');
-        //             return;
-        //         }
-        //         if (json.message === "The email address is already in use by another account.") {
-        //             setEmailError(json.message);
-        //             setUsernameError('');
-        //             setPassword('');
-        //             return;
-        //         }
-        //     }
+            if (!response.ok) {
+                const json = await response.json();
+                if (json.message === "The username is already in use by another account.") {
+                    setErrorsObject(prevState => ({ 
+                        ...prevState, usernameError: json.message,
+                        emailError: '',
+                        passwordError: ''
+                    }));
+                    setFormData(prevState => ({
+                        ...prevState, password: '',
+                    }));
+                    return;
+                }
+                if (json.message === "The email address is already in use by another account.") {
+                    setErrorsObject(prevState => ({ 
+                        ...prevState, usernameError: '',
+                        emailError: json.message,
+                        passwordError: ''
+                    }));
+                    setFormData(prevState => ({
+                        ...prevState, password: '',
+                    }));
+                    return;
+                }
+            }
+
+            setErrorsObject(prevState => ({ 
+                ...prevState, usernameError: '',
+                emailError: '',
+                passwordError: ''
+            }));
     
-        //     const json = await response.json();
-        //     console.log(json); // Log successful response
+            const json = await response.json();
+            console.log(json); // Log successful response
     
-        //     // You might want to do something with the response, like redirect the user or store a token
-        // } catch (error) {
-        //     console.error('Error during sign-up:', error.message);
-        //     // Provide user feedback about the error (e.g., show a message)
-        // }
+        } catch (error) {
+            setErrorsObject(prevState => ({ 
+                ...prevState, usernameError: '',
+                emailError: '',
+                passwordError: error.message
+            }));
+            setFormData(prevState => ({
+                ...prevState, password: '',
+            }));
+        }
     };
     return (
         <SafeAreaView>
