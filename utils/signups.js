@@ -16,21 +16,22 @@ const validatePassword = (text) => {
 export const validateForm = (formData, errorsObject, setErrorsObject) => {
     const { username, email, password } = formData;
     if (!username) {
-        setErrorsObject({ ...errorsObject, usernameError: 'Invalid username'});
-        setErrorsObject({ ...errorsObject, emailError: ''});
-        setErrorsObject({ ...errorsObject, passwordError: ''});
-        return
+        setErrorsObject(prevState => ({ ...prevState, usernameError: 'Invalid username'}));
+        setErrorsObject(prevState => ({ ...prevState, emailError: ''}));
+        setErrorsObject(prevState => ({ ...prevState, passwordError: ''}));
+        return false
     }
     if (!validateEmail(email)) {
-        setErrorsObject({ ...errorsObject, usernameError: ''});
-        setErrorsObject({ ...errorsObject, emailError: 'Invalid Email'});
-        setErrorsObject({ ...errorsObject, passwordError: ''});
-        return
+        setErrorsObject(prevState => ({ ...prevState, usernameError: ''}));
+        setErrorsObject(prevState => ({ ...prevState, emailError: 'Invalid Email'}));
+        setErrorsObject(prevState => ({ ...prevState, passwordError: ''}));
+        return false
     }
     if (!validatePassword(password)) {
-        setErrorsObject({ ...errorsObject, usernameError: ''});
-        setErrorsObject({ ...errorsObject, emailError: ''});
-        setErrorsObject({ ...errorsObject, passwordError: 'Invalid password. Password must: \n - Be at least 8 and at most 14 characters. \n - Contain a mix of uppercase and lowercase letters. \n - Contain at least one digit'});
-        return
+        setErrorsObject(prevState => ({ ...prevState, usernameError: ''}));
+        setErrorsObject(prevState => ({ ...prevState, emailError: ''}));
+        setErrorsObject(prevState => ({ ...prevState, passwordError: 'Invalid password. Password must: \n - Be at least 8 and at most 14 characters. \n - Contain a mix of uppercase and lowercase letters. \n - Contain at least one digit'}));
+        return false
     }
+    return true;
 }

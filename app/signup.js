@@ -5,92 +5,63 @@ import { Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Link } from 'expo-router';
 import imageSource from '../assets/signup.png';
+import { validateForm } from '../utils/signups';
 
 
 export default function Signup() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [username, setUsername] = useState('');
-    const [isValidEmail, setIsValidEmail] = useState(true);
-    const [isValidPassword, setIsValidPassword] = useState(true);
-    const [usernameError,setUsernameError] = useState('');
-    const [emailError,setEmailError] = useState('');
-    const [passwordError, setPasswordError] = useState('');
-
-    const validateEmail = (text) => {
-        if (text === '') return false;
-        const emailRegex = /\S+@\S+\.\S+/;
-        if (emailRegex.test(text)) return true;
-        return false;
-    };
-
-    const validatePassword = (text) => {
-        // Password must be at least 8 characters, max 14 characters, with a mix of uppercase and lowercase letters, and at least 1 number
-        if (text === '') return false;
-        const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,14}$/;
-        if (passwordRegex.test(text)) return true;
-        return false;
-    };
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+        username: ''
+    });
+    const [errorsObject, setErrorsObject] = useState({
+        usernameError: '',
+        emailError: '',
+        passwordError: ''
+    });
 
     const handleSignUp = async () => {
         // Implement your signup logic here
         // You can access the validated email, password, and username from state
-        if (!username) {
-            setUsernameError('Invalid username');
-            setEmailError('');
-            setPasswordError('');
-            return
-        }
-        if (!validateEmail(email)) {
-            setEmailError('Invalid Email');
-            setPasswordError('');
-            setUsernameError('')
-            return
-        }
-        if (!validatePassword(password)) {
-            setPasswordError('Invalid password. Password must: \n - Be at least 8 and at most 14 characters. \n - Contain a mix of uppercase and lowercase letters. \n - Contain at least one digit');
-            setUsernameError('');
-            setEmailError('');
-            return
-        }
-        try {
-            const response = await fetch('http://192.168.4.93:3000/users/register', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username,
-                    email,
-                    password,
-                }),
-            });
+        if (!validateForm(formData, errorsObject, setErrorsObject)) return
+        // try {
+        //     const response = await fetch('http://192.168.4.93:3000/users/register', {
+        //         method: 'POST',
+        //         headers: {
+        //             Accept: 'application/json',
+        //             'Content-Type': 'application/json',
+        //         },
+        //         body: JSON.stringify({
+        //             username,
+        //             email,
+        //             password,
+        //         }),
+        //     });
     
-            if (!response.ok) {
-                const json = await response.json();
-                if (json.message === "The username is already in use by another account.") {
-                    setUsernameError(json.message);
-                    setEmailError('');
-                    setPassword('');
-                    return;
-                }
-                if (json.message === "The email address is already in use by another account.") {
-                    setEmailError(json.message);
-                    setUsernameError('');
-                    setPassword('');
-                    return;
-                }
-            }
+        //     if (!response.ok) {
+        //         const json = await response.json();
+        //         if (json.message === "The username is already in use by another account.") {
+        //             setUsernameError(json.message);
+        //             setEmailError('');
+        //             setPassword('');
+        //             return;
+        //         }
+        //         if (json.message === "The email address is already in use by another account.") {
+        //             setEmailError(json.message);
+        //             setUsernameError('');
+        //             setPassword('');
+        //             return;
+        //         }
+        //     }
     
-            const json = await response.json();
-            console.log(json); // Log successful response
+        //     const json = await response.json();
+        //     console.log(json); // Log successful response
     
-            // You might want to do something with the response, like redirect the user or store a token
-        } catch (error) {
-            console.error('Error during sign-up:', error.message);
-            // Provide user feedback about the error (e.g., show a message)
-        }
+        //     // You might want to do something with the response, like redirect the user or store a token
+        // } catch (error) {
+        //     console.error('Error during sign-up:', error.message);
+        //     // Provide user feedback about the error (e.g., show a message)
+        // }
     };
     return (
         <SafeAreaView>
@@ -107,29 +78,31 @@ export default function Signup() {
                         <Input
                             style={styles.input}
                             placeholder="Username"
+                            value={formData.username}
                             rightIcon={<Icon name="user" size={24} color="#6C63FF" />}
-                            onChangeText={(text) => setUsername(text)}
-                            errorMessage={usernameError}
+                            onChangeText={(text) => setFormData({ ...formData, username: text })}
+                            errorMessage={errorsObject.usernameError}
                         />
                     </View>
                     <View style={styles.inputContainer}>
                         <Input
                             style={styles.input}
                             placeholder="Email"
+                            value={formData.email}
                             rightIcon={<Icon name="envelope" size={24} color="#6C63FF" />}
-                            onChangeText={(text) => setEmail(text)}
-                            errorMessage={emailError}
+                            onChangeText={(text) => setFormData({ ...formData, email: text })}
+                            errorMessage={errorsObject.emailError}
                         />
                     </View>
                     <View style={styles.inputContainer}>
                         <Input
                             style={styles.input}
                             placeholder="Password"
-                            value={password}
+                            value={formData.password}
                             secureTextEntry
                             rightIcon={<Icon name="lock" size={24} color="#6C63FF" />}
-                            onChangeText={(text) => setPassword(text)}
-                            errorMessage={passwordError}
+                            onChangeText={(text) => setFormData({ ...formData, password: text })}
+                            errorMessage={errorsObject.passwordError}
                         />
                     </View>
                     <Pressable style={styles.button} onPress={handleSignUp}>
