@@ -1,11 +1,31 @@
-import { StatusBar } from "expo-status-bar";
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, Pressable } from "react-native";
 import { Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Link } from 'expo-router';
 import imageSource from '../assets/signup.png';
+import { validateForm, sendRequestToServer } from '../utils/signups';
 
-export default function SignUp({ formData, setFormData }) {
+export default function SignUp() {
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+        username: ''
+    });
+    const [errorsObject, setErrorsObject] = useState({
+        usernameError: '',
+        emailError: '',
+        passwordError: ''
+    });
+
+    const handleSignUp = async () => {
+        // Implement your signup logic here
+        // You can access the validated email, password, and username from state
+        if (!validateForm(formData, setErrorsObject)) return
+        if (await sendRequestToServer(formData, setErrorsObject, setFormData)) {
+            console.log('success')
+        }
+    };
     return (
         <View style={styles.container}>
             <View style={styles.imageContainer}>
@@ -47,7 +67,7 @@ export default function SignUp({ formData, setFormData }) {
                         errorMessage={errorsObject.passwordError}
                     />
                 </View>
-                <Pressable style={styles.button} onPress={handleSignUp}>
+                <Pressable style={styles.button} onPress={async () => await handleSignUp()}>
                     <Text style={styles.buttonText}>Sign Up</Text>
                 </Pressable>
                 <View style={styles.textContainer2}>
@@ -57,7 +77,6 @@ export default function SignUp({ formData, setFormData }) {
                     </Link>
                 </View>
             </View>
-            <StatusBar style="auto" />
         </View>
     );
 };
