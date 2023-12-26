@@ -16,21 +16,26 @@ const validatePassword = (text) => {
 export const validateForm = (formData, errorsObject, setErrorsObject) => {
     const { username, email, password } = formData;
     if (!username) {
-        setErrorsObject(prevState => ({ ...prevState, usernameError: 'Invalid username'}));
-        setErrorsObject(prevState => ({ ...prevState, emailError: ''}));
-        setErrorsObject(prevState => ({ ...prevState, passwordError: ''}));
+        setErrorsObject(prevState => ({ 
+            ...prevState, usernameError: 'Invalid username',
+            emailError: '',
+            passwordError: ''
+        }));
         return false
     }
     if (!validateEmail(email)) {
-        setErrorsObject(prevState => ({ ...prevState, usernameError: ''}));
-        setErrorsObject(prevState => ({ ...prevState, emailError: 'Invalid Email'}));
-        setErrorsObject(prevState => ({ ...prevState, passwordError: ''}));
+        setErrorsObject(prevState => ({ 
+            ...prevState, usernameError: '',
+            emailError: 'Invalid Email',
+            passwordError: ''
+        }));
         return false
     }
     if (!validatePassword(password)) {
-        setErrorsObject(prevState => ({ ...prevState, usernameError: ''}));
-        setErrorsObject(prevState => ({ ...prevState, emailError: ''}));
-        setErrorsObject(prevState => ({ ...prevState, passwordError: 'Invalid password. Password must: \n - Be at least 8 and at most 14 characters. \n - Contain a mix of uppercase and lowercase letters. \n - Contain at least one digit'}));
+        setErrorsObject(prevState => ({ 
+            ...prevState, passwordError: 'Invalid password. Password must: \n - Be at least 8 and at most 14 characters. \n - Contain a mix of uppercase and lowercase letters. \n - Contain at least one digit',
+            usernameError: '', emailError: ''
+        }));
         return false
     }
     return true;
