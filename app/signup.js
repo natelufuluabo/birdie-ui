@@ -15,30 +15,43 @@ export default function Signup() {
     const [isValidPassword, setIsValidPassword] = useState(true);
     const [usernameError,setUsernameError] = useState('');
     const [emailError,setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
 
     const validateEmail = (text) => {
-        // You can use a regular expression for basic email validation
-        if (text === '') setIsValidEmail(false);
+        if (text === '') return false;
         const emailRegex = /\S+@\S+\.\S+/;
-        setIsValidEmail(emailRegex.test(text));
-        setEmail(text);
+        if (emailRegex.test(text)) return true;
+        return false;
     };
 
     const validatePassword = (text) => {
         // Password must be at least 8 characters, max 14 characters, with a mix of uppercase and lowercase letters, and at least 1 number
-        if (text === '') setIsValidPassword(false);
+        if (text === '') return false;
         const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,14}$/;
-        setIsValidPassword(passwordRegex.test(text));
-        setPassword(text);
+        if (passwordRegex.test(text)) return true;
+        return false;
     };
 
     const handleSignUp = async () => {
         // Implement your signup logic here
         // You can access the validated email, password, and username from state
-        if (!email || !password || !username) {
-            setIsValidEmail(false);
-            setIsValidPassword(false);
-            return 
+        if (!username) {
+            setUsernameError('Invalid username');
+            setEmailError('');
+            setPasswordError('');
+            return
+        }
+        if (!validateEmail(email)) {
+            setEmailError('Invalid Email');
+            setPasswordError('');
+            setUsernameError('')
+            return
+        }
+        if (!validatePassword(password)) {
+            setPasswordError('Invalid password. Password must: \n - Be at least 8 and at most 14 characters. \n - Contain a mix of uppercase and lowercase letters. \n - Contain at least one digit');
+            setUsernameError('');
+            setEmailError('');
+            return
         }
         try {
             const response = await fetch('http://192.168.4.93:3000/users/register', {
@@ -56,13 +69,15 @@ export default function Signup() {
     
             if (!response.ok) {
                 const json = await response.json();
-                if (json.body.message === "The username is already in use by another account.") {
-                    setUsernameError(json.body.message);
+                if (json.message === "The username is already in use by another account.") {
+                    setUsernameError(json.message);
+                    setEmailError('');
                     setPassword('');
                     return;
                 }
-                if (json.body.message === "The email address is already in use by another account.") {
-                    setEmailError(json.body.message);
+                if (json.message === "The email address is already in use by another account.") {
+                    setEmailError(json.message);
+                    setUsernameError('');
                     setPassword('');
                     return;
                 }
@@ -102,18 +117,19 @@ export default function Signup() {
                             style={styles.input}
                             placeholder="Email"
                             rightIcon={<Icon name="envelope" size={24} color="#6C63FF" />}
-                            onChangeText={validateEmail}
-                            errorMessage={isValidEmail ? emailError : 'Invalid email address'}
+                            onChangeText={(text) => setEmail(text)}
+                            errorMessage={emailError}
                         />
                     </View>
                     <View style={styles.inputContainer}>
                         <Input
                             style={styles.input}
                             placeholder="Password"
+                            value={password}
                             secureTextEntry
                             rightIcon={<Icon name="lock" size={24} color="#6C63FF" />}
-                            onChangeText={validatePassword}
-                            errorMessage={isValidPassword ? null : 'Invalid password. Password must: \n - Be at least 8 and at most 14 characters. \n - Contain a mix of uppercase and lowercase letters. \n - Contain at least one digit'}
+                            onChangeText={(text) => setPassword(text)}
+                            errorMessage={passwordError}
                         />
                     </View>
                     <Pressable style={styles.button} onPress={handleSignUp}>
