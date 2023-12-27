@@ -1,16 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, Text, Image, SafeAreaView, Pressable } from "react-native";
+import { 
+    StyleSheet, View, Text, Pressable, Image, SafeAreaView, 
+    TextInput, TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard 
+} from "react-native";
 import { Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Link } from 'expo-router';
 import imageSource from '../assets/login.png';
 
 export default function Login() {
-    const [password, setPassword] = useState('');
-    const [email, setEmail] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
-    const handleSingIn = () => {
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+        username: ''
+    });
+    const [errorsObject, setErrorsObject] = useState({
+        usernameError: '',
+        emailError: '',
+        passwordError: ''
+    });
+    const passwordRef = useRef(null);
+    const handleSingIn = async () => {
         // Implement your sigin logic here
         console.log('Email:', email);
         console.log('Password:', password);
@@ -22,35 +33,64 @@ export default function Login() {
                     <Image source={imageSource} style={styles.image} />
                 </View>
                 <Text style={styles.headline}>Connect with friends and family!</Text>
-                <View style={styles.formContainer}>
-                    <View style={styles.inputContainer}>
-                        <Input
-                            style={styles.input}
-                            placeholder="Email"
-                            rightIcon={<Icon name="envelope" size={24} color="#6C63FF" />}
-                            onChangeText={(text) => setEmail(text)}
-                        />
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Input
-                            style={styles.input}
-                            placeholder="Password"
-                            secureTextEntry
-                            rightIcon={<Icon name="lock" size={24} color="#6C63FF" />}
-                            onChangeText={(text) => setPassword(text)}
-                            errorMessage={errorMessage}
-                        />
-                    </View>
-                    <Pressable style={styles.button} onPress={handleSingIn}>
-                        <Text style={styles.buttonText}>Sign In</Text>
-                    </Pressable>
-                    <View style={styles.textContainer2}>
-                        <Text>Need an account?</Text>
-                        <Link href='/signup' asChild>
-                            <Text style={styles.linkText}>Sign up</Text>
-                        </Link>
-                    </View>
-                </View>
+                <KeyboardAvoidingView behavior='padding'>
+                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                        <View style={styles.formContainer}>
+                            <View style={styles.formSection}>
+                                <View style={styles.inputContainer}>
+                                    <TextInput
+                                        style={styles.input}
+                                        inputMode='email'
+                                        returnKeyType='next'
+                                        returnKeyLabel='Next'
+                                        onSubmitEditing={() => {
+                                            passwordRef.current.focus();
+                                        }}
+                                        blurOnSubmit={false}
+                                        autoComplete='email'
+                                        autoCorrect
+                                        keyboardType='email-address'
+                                        placeholder="Email"
+                                        value={formData.email}
+                                        onChangeText={(text) => setFormData(prevState => ({ ...prevState, email: text }))}
+                                    />
+                                    <Icon name="envelope" size={24} color="#6C63FF" />
+                                </View>
+                                <Text style={styles.errorText}>{errorsObject.usernameError}</Text>
+                            </View>
+                            <View style={styles.formSection}>
+                                <View style={styles.inputContainer}>
+                                    <TextInput
+                                        style={styles.input}
+                                        inputMode='text'
+                                        ref={passwordRef}
+                                        returnKeyType='next'
+                                        returnKeyLabel='go'
+                                        onSubmitEditing={async () => {
+                                            await handleSingIn();
+                                        }}
+                                        blurOnSubmit={false}
+                                        placeholder="Password"
+                                        value={formData.password}
+                                        secureTextEntry
+                                        onChangeText={(text) => setFormData(prevState => ({ ...prevState, password: text }))}
+                                    />
+                                <Icon name="lock" size={24} color="#6C63FF" />
+                            </View>
+                            <Text style={styles.errorText}>{errorsObject.passwordError}</Text>
+                        </View>
+                            <Pressable style={styles.button} onPress={handleSingIn}>
+                                <Text style={styles.buttonText}>Sign In</Text>
+                            </Pressable>
+                            <View style={styles.textContainer2}>
+                                <Text>Need an account?</Text>
+                                <Link href='/signup' asChild>
+                                    <Text style={styles.linkText}>Sign up</Text>
+                                </Link>
+                            </View>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </KeyboardAvoidingView>
                 <StatusBar style="auto" />
             </View>
         </SafeAreaView>
@@ -85,29 +125,45 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         width: '100%',
-        paddingHorizontal: 20,
+        paddingHorizontal: 15,
         gap: 20,
         justifyContent: 'center',
     },
-    inputContainer: {
+    formSection: {
         borderWidth: 1,
         borderStyle: 'solid',
         borderColor: '#6C63FF',
-        borderRadius: 20,
+        borderRadius: 18,
         display: 'flex',
-        alignItems: 'center',
+        flexDirection: 'column',
         justifyContent: 'center',
-        padding: 5
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        gap: 5
+    },
+    input: {
+        width: '90%',
+        borderBottomWidth: 1,
+        borderBottomColor: '#6C63FF'
+    },
+    inputContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    errorText: {
+        color: '#6C63FF',
+        fontWeight: 'bold'
     },
     button: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 10,
         backgroundColor: '#6C63FF',
         paddingVertical: 15,
         paddingHorizontal: 50,
-        borderRadius: 30,
+        borderRadius: 20,
         width: '70%',
         alignSelf: 'center'
     },
