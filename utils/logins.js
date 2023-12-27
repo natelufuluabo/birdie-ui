@@ -1,7 +1,7 @@
 import { validateEmail, validatePassword } from "./shared";
 
 export const validateForm = (formData, setErrorsObject) => {
-    const { username, email, password } = formData;
+    const { email, password } = formData;
     if (!validateEmail(email)) {
         setErrorsObject(prevState => ({ 
             ...prevState, usernameError: '',

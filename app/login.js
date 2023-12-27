@@ -7,6 +7,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Link } from 'expo-router';
 import imageSource from '../assets/login.png';
+import { validateForm } from '../utils/logins';
 
 export default function Login() {
     const [formData, setFormData] = useState({
@@ -22,8 +23,12 @@ export default function Login() {
     const passwordRef = useRef(null);
     const handleSingIn = async () => {
         // Implement your sigin logic here
-        console.log('Email:', email);
-        console.log('Password:', password);
+        if (validateForm(formData, setErrorsObject)) {
+            console.log(formData);
+        } else {
+            console.log(errorsObject)
+            console.log(formData)
+        }
     };
     return (
         <SafeAreaView>
@@ -55,7 +60,7 @@ export default function Login() {
                                     />
                                     <Icon name="envelope" size={24} color="#6C63FF" />
                                 </View>
-                                <Text style={styles.errorText}>{errorsObject.usernameError}</Text>
+                                <Text style={styles.errorText}>{errorsObject.emailError}</Text>
                             </View>
                             <View style={styles.formSection}>
                                 <View style={styles.inputContainer}>
@@ -78,7 +83,7 @@ export default function Login() {
                             </View>
                             <Text style={styles.errorText}>{errorsObject.passwordError}</Text>
                         </View>
-                            <Pressable style={styles.button} onPress={handleSingIn}>
+                            <Pressable style={styles.button} onPress={async () => await handleSingIn()}>
                                 <Text style={styles.buttonText}>Sign In</Text>
                             </Pressable>
                             <View style={styles.textContainer2}>
