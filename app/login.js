@@ -4,7 +4,6 @@ import {
     StyleSheet, View, Text, Pressable, Image, SafeAreaView, 
     TextInput, TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard 
 } from "react-native";
-import { Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Link } from 'expo-router';
 import imageSource from '../assets/login.png';
