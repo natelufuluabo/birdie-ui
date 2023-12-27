@@ -56,7 +56,7 @@ export default function Login() {
                                         keyboardType='email-address'
                                         placeholder="Email"
                                         value={formData.email}
-                                        onChangeText={(text) => setFormData(prevState => ({ ...prevState, email: text }))}
+                                        onChangeText={(text) => setFormData(prevState => ({ ...prevState, email: text.toLowerCase() }))}
                                     />
                                     <Icon name="envelope" size={24} color="#6C63FF" />
                                 </View>

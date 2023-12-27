@@ -56,7 +56,7 @@ export default function SignUp({ setSignUpSuccessfull }) {
                                     blurOnSubmit={false}
                                     placeholder="Username"
                                     value={formData.username}
-                                    onChangeText={(text) => setFormData(prevState => ({ ...prevState, username: text }))}
+                                    onChangeText={(text) => setFormData(prevState => ({ ...prevState, username: text.toLowerCase() }))}
                                     errorMessage={errorsObject.usernameError}
                                 />
                                 <Icon name="user" size={24} color="#6C63FF" />
@@ -80,7 +80,7 @@ export default function SignUp({ setSignUpSuccessfull }) {
                                     keyboardType='email-address'
                                     placeholder="Email"
                                     value={formData.email}
-                                    onChangeText={(text) => setFormData(prevState => ({ ...prevState, email: text }))}
+                                    onChangeText={(text) => setFormData(prevState => ({ ...prevState, email: text.toLowerCase() }))}
                                 />
                                 <Icon name="envelope" size={24} color="#6C63FF" />
                             </View>

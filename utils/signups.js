@@ -1,4 +1,5 @@
 import { validateEmail, validatePassword } from "./shared";
+import { REACT_APP_REGISTER_ENPOINT } from "@env"
 
 export const validateForm = (formData, setErrorsObject) => {
     const { username, email, password } = formData;
@@ -30,7 +31,7 @@ export const validateForm = (formData, setErrorsObject) => {
 
 export const sendRequestToServer = async (formData, setErrorsObject, setFormData) => {
     try {
-        const response = await fetch('http://192.168.4.93:3000/users/register', {
+        const response = await fetch(`${REACT_APP_REGISTER_ENPOINT}`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
