@@ -54,11 +54,10 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 10,
+    borderRadius: 20,
     backgroundColor: '#6C63FF',
     paddingVertical: 15,
     paddingHorizontal: 50,
-    borderRadius: 30
   },
   buttonText: {
     color: '#fff',
