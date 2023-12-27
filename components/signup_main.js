@@ -8,7 +8,7 @@ import { Link } from 'expo-router';
 import imageSource from '../assets/signup.png';
 import { validateForm, sendRequestToServer } from '../utils/signups';
 
-export default function SignUp() {
+export default function SignUp({ setSignUpSuccessfull }) {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -28,7 +28,7 @@ export default function SignUp() {
         // You can access the validated email, password, and username from state
         if (!validateForm(formData, setErrorsObject)) return
         if (await sendRequestToServer(formData, setErrorsObject, setFormData)) {
-            console.log('success')
+            setSignUpSuccessfull(prevState => (prevState = true));
         }
     };
     return (

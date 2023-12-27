@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, Image,Pressable } from "react-native";
 import { Link } from 'expo-router';
 import imageSource from '../assets/successImg.png';
 
-export default function ConfirmationEmail({ setSignUpSuccessfull }) {
+export default function ConfirmationSignUp({ setSignUpSuccessfull }) {
     return (
         <View style={styles.container}>
             <View style={styles.imageContainer}>

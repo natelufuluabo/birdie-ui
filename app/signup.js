@@ -2,14 +2,18 @@ import React, { useState } from 'react';
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, SafeAreaView } from "react-native";
 import SignUp from '../components/signup_main';
-import ConfirmationEmail from '../components/confirmation_email';
+import ConfirmationSignUp from '../components/confirmation_signup';
 
 
 export default function Signup() {
-    const [signUpSuccessfull, setSignUpSuccessfull] = useState(true);
+    const [signUpSuccessfull, setSignUpSuccessfull] = useState(false);
     return (
         <SafeAreaView>
-            { signUpSuccessfull ? <ConfirmationEmail setSignUpSuccessfull={setSignUpSuccessfull} /> : <SignUp /> }
+            { 
+                signUpSuccessfull ? 
+                <ConfirmationSignUp setSignUpSuccessfull={setSignUpSuccessfull} /> : 
+                <SignUp setSignUpSuccessfull={setSignUpSuccessfull} /> 
+            }
             <StatusBar style="auto" />
         </SafeAreaView>
     );
