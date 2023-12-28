@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image,Pressable } from "react-native";
 import { Link } from 'expo-router';
 import imageSource from '../assets/successImg.png';
