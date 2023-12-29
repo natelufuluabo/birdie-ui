@@ -22,7 +22,7 @@ export default function Login() {
     const handleSingIn = async () => {
         // Implement your sigin logic here
         if (!validateForm(formData, setErrorsObject)) return
-        if (! await loginUser(formData.email, formData.password)) {
+        if (!await loginUser(formData.email, formData.password)) {
             setErrorsObject(prevState => ({ 
                 ...prevState,
                 emailError: '',
@@ -31,6 +31,7 @@ export default function Login() {
             setFormData(prevState => ({ 
                 ...prevState, password: '',
             }));
+            return
         }
     };
     return (
