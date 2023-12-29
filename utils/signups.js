@@ -33,9 +33,24 @@ export const validateForm = (formData, setErrorsObject) => {
 
 export const createUser = async (formData, setErrorsObject, setFormData) => {
     const auth = getAuth(app);
-    const result = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-    if (result.user) return true
-    return false
+    try {
+        const result = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+        console.log(result.user);
+    } catch (error) {
+        if (error.message === 'Firebase: Error (auth/email-already-in-use).') {
+            setErrorsObject(prevState => ({ 
+                ...prevState, usernameError: '',
+                emailError: 'email already in use',
+                passwordError: ''
+            }));
+            // setFormData(prevState => ({
+            //     ...prevState, password: '',
+            // }));
+            return false;
+        }
+    }
+    // if (result.user) return true
+    // return false
 }
 
 export const sendRequestToServer = async (formData, setErrorsObject, setFormData) => {

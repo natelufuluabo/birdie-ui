@@ -30,7 +30,7 @@ export default function SignUp({ setSignUpSuccessfull }) {
         // if (await sendRequestToServer(formData, setErrorsObject, setFormData)) {
         //     setSignUpSuccessfull(prevState => (prevState = true));
         // }
-        if (await createUser(formData)) {
+        if (await createUser(formData, setErrorsObject)) {
             setSignUpSuccessfull(prevState => (prevState = true));
         }
     };
