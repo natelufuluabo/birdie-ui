@@ -2,6 +2,7 @@ import { validateEmail, validatePassword } from "./shared";
 import { REACT_APP_REGISTER_ENPOINT } from "@env";
 import { app } from "./firebaseConfig";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
 
 export const validateForm = (formData, setErrorsObject) => {
     const { username, email, password } = formData;
@@ -35,7 +36,13 @@ export const createUser = async (formData, setErrorsObject, setFormData) => {
     const auth = getAuth(app);
     try {
         const result = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-        console.log(result.user);
+        const user = result.user;
+        const userData = { 
+            uid: user.uid, 
+            username: formData.username,
+            email: formData.email
+        };
+        await saveUserToFireStore(userData);
     } catch (error) {
         if (error.message === 'Firebase: Error (auth/email-already-in-use).') {
             setErrorsObject(prevState => ({ 
@@ -51,6 +58,15 @@ export const createUser = async (formData, setErrorsObject, setFormData) => {
     }
     // if (result.user) return true
     // return false
+}
+
+async function saveUserToFireStore(userData) {
+    const db = getFirestore(app);
+    try {
+        await addDoc(collection(db, "users"), { ...userData });
+    } catch (error) {
+        console.log("Error adding document: ", error);
+    }
 }
 
 export const sendRequestToServer = async (formData, setErrorsObject, setFormData) => {
