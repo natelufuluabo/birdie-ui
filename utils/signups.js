@@ -1,5 +1,8 @@
 import { validateEmail, validatePassword } from "./shared";
-import { REACT_APP_REGISTER_ENPOINT } from "@env"
+import { REACT_APP_REGISTER_ENPOINT } from "@env";
+import auth from '@react-native-firebase/auth';
+// import { auth } from "./firebaseConfig";
+// import { createUserWithEmailAndPassword } from "firebase/auth";
 
 export const validateForm = (formData, setErrorsObject) => {
     const { username, email, password } = formData;
@@ -27,6 +30,13 @@ export const validateForm = (formData, setErrorsObject) => {
         return false
     }
     return true;
+}
+
+export const createUser = async (formData, setErrorsObject, setFormData) => {
+    const user = await auth().createUserWithEmailAndPassword(formData.email, formData.password)
+    console.log(user.user);
+    if (user) return true
+    return false
 }
 
 export const sendRequestToServer = async (formData, setErrorsObject, setFormData) => {

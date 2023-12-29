@@ -6,7 +6,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Link } from 'expo-router';
 import imageSource from '../assets/signup.png';
-import { validateForm, sendRequestToServer } from '../utils/signups';
+import { validateForm, sendRequestToServer, createUser } from '../utils/signups';
 
 export default function SignUp({ setSignUpSuccessfull }) {
     const [formData, setFormData] = useState({
@@ -27,7 +27,10 @@ export default function SignUp({ setSignUpSuccessfull }) {
         // Implement your signup logic here
         // You can access the validated email, password, and username from state
         if (!validateForm(formData, setErrorsObject)) return
-        if (await sendRequestToServer(formData, setErrorsObject, setFormData)) {
+        // if (await sendRequestToServer(formData, setErrorsObject, setFormData)) {
+        //     setSignUpSuccessfull(prevState => (prevState = true));
+        // }
+        if (await createUser(formData)) {
             setSignUpSuccessfull(prevState => (prevState = true));
         }
     };
