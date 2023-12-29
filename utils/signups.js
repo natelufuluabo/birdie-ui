@@ -1,8 +1,7 @@
 import { validateEmail, validatePassword } from "./shared";
-import { REACT_APP_REGISTER_ENPOINT } from "@env";
 import { app } from "./firebaseConfig";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, collection, addDoc, query, where, } from "firebase/firestore";
+import { getFirestore, collection, addDoc, query, where, getDocs } from "firebase/firestore";
 
 export const validateForm = (formData, setErrorsObject) => {
     const { username, email, password } = formData;
@@ -33,15 +32,15 @@ export const validateForm = (formData, setErrorsObject) => {
 }
 
 export const createUser = async (formData, setErrorsObject, setFormData) => {
-    if (!await userExist(formData.username)) {
+    if (await userExist(formData.username)) {
         setErrorsObject(prevState => ({ 
             ...prevState, usernameError: 'username already in use',
             emailError: '',
             passwordError: ''
         }));
-        // setFormData(prevState => ({
-        //     ...prevState, password: '',
-        // }));
+        setFormData(prevState => ({
+            ...prevState, password: '',
+        }));
         return false;
     }
     const auth = getAuth(app);
@@ -54,6 +53,13 @@ export const createUser = async (formData, setErrorsObject, setFormData) => {
             email: formData.email
         };
         await saveUserToFireStore(userData);
+        setErrorsObject(prevState => ({ 
+            ...prevState, usernameError: '',
+            emailError: '',
+            passwordError: ''
+        }));
+
+        return true;
     } catch (error) {
         if (error.message === 'Firebase: Error (auth/email-already-in-use).') {
             setErrorsObject(prevState => ({ 
@@ -61,14 +67,12 @@ export const createUser = async (formData, setErrorsObject, setFormData) => {
                 emailError: 'email already in use',
                 passwordError: ''
             }));
-            // setFormData(prevState => ({
-            //     ...prevState, password: '',
-            // }));
+            setFormData(prevState => ({
+                ...prevState, password: '',
+            }));
             return false;
         }
     }
-    // if (result.user) return true
-    // return false
 }
 
 async function saveUserToFireStore(userData) {
@@ -89,67 +93,5 @@ async function userExist(username) {
         else return false;
     } catch (error) {
         console.log("Error checking user existence:", error);
-    }
-}
-
-export const sendRequestToServer = async (formData, setErrorsObject, setFormData) => {
-    try {
-        const response = await fetch(`${REACT_APP_REGISTER_ENPOINT}`, {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username: formData.username,
-                email: formData.email,
-                password: formData.password
-            }),
-        });
-
-        if (!response.ok) {
-            const json = await response.json();
-            if (json.message === "The username is already in use by another account.") {
-                setErrorsObject(prevState => ({ 
-                    ...prevState, usernameError: json.message,
-                    emailError: '',
-                    passwordError: ''
-                }));
-                setFormData(prevState => ({
-                    ...prevState, password: '',
-                }));
-                return false;
-            }
-            if (json.message === "The email address is already in use by another account.") {
-                setErrorsObject(prevState => ({ 
-                    ...prevState, usernameError: '',
-                    emailError: json.message,
-                    passwordError: ''
-                }));
-                setFormData(prevState => ({
-                    ...prevState, password: '',
-                }));
-                return false;
-            }
-        }
-
-        setErrorsObject(prevState => ({ 
-            ...prevState, usernameError: '',
-            emailError: '',
-            passwordError: ''
-        }));
-
-        return true;
-
-    } catch (error) {
-        setErrorsObject(prevState => ({ 
-            ...prevState, usernameError: '',
-            emailError: '',
-            passwordError: error.message
-        }));
-        setFormData(prevState => ({
-            ...prevState, password: '',
-        }));
-        return false;
     }
 }
