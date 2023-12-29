@@ -2,7 +2,7 @@ import { validateEmail, validatePassword } from "./shared";
 import { REACT_APP_REGISTER_ENPOINT } from "@env";
 import { app } from "./firebaseConfig";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, query, where, } from "firebase/firestore";
 
 export const validateForm = (formData, setErrorsObject) => {
     const { username, email, password } = formData;
@@ -33,6 +33,17 @@ export const validateForm = (formData, setErrorsObject) => {
 }
 
 export const createUser = async (formData, setErrorsObject, setFormData) => {
+    if (!await userExist(formData.username)) {
+        setErrorsObject(prevState => ({ 
+            ...prevState, usernameError: 'username already in use',
+            emailError: '',
+            passwordError: ''
+        }));
+        // setFormData(prevState => ({
+        //     ...prevState, password: '',
+        // }));
+        return false;
+    }
     const auth = getAuth(app);
     try {
         const result = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
@@ -66,6 +77,18 @@ async function saveUserToFireStore(userData) {
         await addDoc(collection(db, "users"), { ...userData });
     } catch (error) {
         console.log("Error adding document: ", error);
+    }
+}
+
+async function userExist(username) {
+    const db = getFirestore(app);
+    const q = query(collection(db, "users"), where("username", "==", username));
+    try {
+        const querySnapshot = await getDocs(q);
+        if (querySnapshot.size > 0) return true;
+        else return false;
+    } catch (error) {
+        console.log("Error checking user existence:", error);
     }
 }
 
