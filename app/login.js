@@ -6,10 +6,12 @@ import {
 } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Link } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 import imageSource from '../assets/login.png';
 import { validateForm, loginUser } from '../utils/logins';
 
 export default function Login() {
+    const navigation = useNavigation();
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -22,7 +24,8 @@ export default function Login() {
     const handleSingIn = async () => {
         // Implement your sigin logic here
         if (!validateForm(formData, setErrorsObject)) return
-        if (!await loginUser(formData.email, formData.password)) {
+        const response = await loginUser(formData.email, formData.password);
+        if (!response.ok) {
             setErrorsObject(prevState => ({ 
                 ...prevState,
                 emailError: '',
@@ -33,6 +36,13 @@ export default function Login() {
             }));
             return
         }
+        setErrorsObject(prevState => ({ 
+            ...prevState,
+            emailError: '',
+            passwordError: ''
+        }));
+        console.log('redirecting to main page...')
+        navigation.navigate('main', { uid: response.uid });
     };
     return (
         <SafeAreaView>
