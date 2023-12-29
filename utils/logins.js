@@ -1,4 +1,6 @@
 import { validateEmail, validatePassword } from "./shared";
+import { app } from "./firebaseConfig";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 export const validateForm = (formData, setErrorsObject) => {
     const { email, password } = formData;
@@ -18,4 +20,21 @@ export const validateForm = (formData, setErrorsObject) => {
         return false
     }
     return true;
+}
+
+export const loginUser = async(email, password) => {
+    const auth = getAuth(app);
+    try {
+        const userCredential = await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
+    
+        const signedInUser = userCredential.user;
+    
+        console.log('User signed in successfully:', signedInUser);
+    } catch (error) {
+        if (error.message === 'Firebase: Error (auth/invalid-credential).') return false 
+    }
 }

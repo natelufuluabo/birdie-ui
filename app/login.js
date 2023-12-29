@@ -7,27 +7,30 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Link } from 'expo-router';
 import imageSource from '../assets/login.png';
-import { validateForm } from '../utils/logins';
+import { validateForm, loginUser } from '../utils/logins';
 
 export default function Login() {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
-        username: ''
     });
     const [errorsObject, setErrorsObject] = useState({
-        usernameError: '',
         emailError: '',
         passwordError: ''
     });
     const passwordRef = useRef(null);
     const handleSingIn = async () => {
         // Implement your sigin logic here
-        if (validateForm(formData, setErrorsObject)) {
-            console.log(formData);
-        } else {
-            console.log(errorsObject)
-            console.log(formData)
+        if (!validateForm(formData, setErrorsObject)) return
+        if (! await loginUser(formData.email, formData.password)) {
+            setErrorsObject(prevState => ({ 
+                ...prevState,
+                emailError: '',
+                passwordError: 'invalid credentials'
+            }));
+            setFormData(prevState => ({ 
+                ...prevState, password: '',
+            }));
         }
     };
     return (
