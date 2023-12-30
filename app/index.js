@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image, Pressable } from 'react-native';
 import { Link } from 'expo-router';
 import imageSource from '../assets/homscreen.png';
 
-export default function App() {
+export default function Home() {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>

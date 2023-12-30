@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, SafeAreaView } from "react-native";
-import SignUp from '../screens/signup_main';
-import ConfirmationSignUp from '../screens/confirmation_signup';
+import SignUp from '../components/signup_main';
+import ConfirmationSignUp from '../components/confirmation_signup';
 
 
 export default function Signup() {
