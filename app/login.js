@@ -9,6 +9,8 @@ import { Link } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
 import imageSource from '../assets/login.png';
 import { validateForm, loginUser } from '../utils/logins';
+import { app } from '../utils/firebaseConfig';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 export default function Login() {
     const navigation = useNavigation();
@@ -41,8 +43,10 @@ export default function Login() {
             emailError: '',
             passwordError: ''
         }));
-        console.log('redirecting to main page...')
-        navigation.navigate('main', { uid: response.uid });
+        const auth = getAuth(app);
+        onAuthStateChanged(auth, (user) => {
+            if (user) navigation.navigate('main');
+        })
     };
     return (
         <SafeAreaView>
