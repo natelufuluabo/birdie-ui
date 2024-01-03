@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Pressable } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import socket from '../utils/socketService';
 import { app } from '../utils/firebaseConfig';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 
 export default function Profile() {
+    const navigation = useNavigation();
     const [userId, setUserId] = useState(null);
     const auth = getAuth(app);
     const handleSignOut = async () => {
