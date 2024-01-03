@@ -11,6 +11,7 @@ import imageSource from '../assets/login.png';
 import { validateForm, loginUser } from '../utils/logins';
 import { app } from '../utils/firebaseConfig';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import socket from '../utils/socketService';
 
 export default function Login() {
     const navigation = useNavigation();
@@ -45,8 +46,12 @@ export default function Login() {
         }));
         const auth = getAuth(app);
         onAuthStateChanged(auth, (user) => {
-            if (user) navigation.navigate('main');
-        })
+            if (user) {
+                socket.connect()
+                socket.emit('login', { userId: user.uid });
+                navigation.navigate('main');
+            }
+        });
     };
     return (
         <SafeAreaView>

@@ -32,7 +32,6 @@ export const loginUser = async(email, password) => {
             password
         );
 
-        console.log('User signed in successfully');
         return { ok: true, uid: userCredential.user.uid };
     } catch (error) {
         if (error.message === 'Firebase: Error (auth/invalid-credential).') return { ok: false, uid: undefined }; 

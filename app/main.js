@@ -15,7 +15,7 @@ export default function Main() {
     onAuthStateChanged(auth, (user) => {
       if (user) setUserId(user.uid);
       else navigation.navigate('login')
-    })
+    });
   }, []);
   return (
     <View>
