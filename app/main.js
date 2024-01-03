@@ -3,18 +3,20 @@ import { View, Text, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { app } from '../utils/firebaseConfig';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import socket from '../utils/socketService';
 
 export default function Main() {
   const navigation = useNavigation();
   const [userId, setUserId] = useState(null);
   const auth = getAuth(app);
   const handleSignOut = async () => {
+    socket.disconnect();
     await signOut(auth);
   }
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) setUserId(user.uid);
-      else navigation.navigate('login')
+      else navigation.navigate('login');
     });
   }, []);
   return (
