@@ -1,6 +1,7 @@
 import io from 'socket.io-client';
+import { REACT_APP_SERVER_ENPOINT } from "@env";
 
-const socket = io('http://192.168.4.93:3000', {
+const socket = io(`${REACT_APP_SERVER_ENPOINT}`, {
     autoConnect: false
 });
 
