@@ -38,7 +38,8 @@ export const loginUser = async(email, password) => {
     }
 }
 
-async function getUser(uid) {
+export default async function getUser(uid) {
+    console.log(uid);
     const db = getFirestore(app);
     const q = query(collection(db, "users"), where("uid", "==", uid));
     try {
@@ -47,26 +48,7 @@ async function getUser(uid) {
             const userData = querySnapshot.docs[0].data();
             return userData;
         }
-        console.log(false);
-        return
     } catch (error) {
         console.log("Error checking user existence:", error);
     }
 }
-
-// async function getUser(uid) {
-//     const db = getFirestore(app);
-//     const userRef = doc(db, "users", uid);
-//     try {
-//         const userSnapshot = await getDoc(userRef);
-
-//         if (userSnapshot.exists()) {
-//             const userData = userSnapshot.data();
-//             console.log(userData);
-//         } else {
-//             console.log("User not found");
-//         }
-//     } catch (error) {
-//         console.log("Error checking user existence:", error);
-//     }
-// }
