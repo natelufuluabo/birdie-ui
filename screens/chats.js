@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { app } from '../utils/firebaseConfig';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import imageSource from '../assets/chats_empty.png';
 import FloatingButton from '../components/FloatingButton';
 
@@ -11,7 +11,6 @@ export default function Chats() {
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             if (user) setUserId(user.uid);
-            else navigation.navigate('login');
         });
     }, []);
     return (
