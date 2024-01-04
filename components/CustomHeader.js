@@ -1,25 +1,51 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const CustomHeader = ({ title, showBackButton = true }) => {
+export default function CustomHeader({ title, showBackButton = true }) {
   const navigation = useNavigation();
 
   const handleBackPress = () => {
-    // You can customize the route name as needed
     navigation.navigate('Home');
   };
 
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}>
+    <View style={styles.container}>
       {showBackButton && (
-        <TouchableOpacity onPress={handleBackPress}>
-          <Text style={{ fontSize: 18, marginRight: 10 }}>{'< Back'}</Text>
+        <TouchableOpacity style={styles.button} onPress={handleBackPress}>
+          <Text style={styles.buttonText}>
+            <Ionicons name="chevron-back" size={18} color='#444' />
+            Back
+          </Text>
         </TouchableOpacity>
       )}
-      <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{title}</Text>
+      <Text style={styles.title}>{title}</Text>
     </View>
   );
 };
 
-export default CustomHeader;
+const styles = StyleSheet.create({
+  container: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    paddingHorizontal: 10,
+    paddingVertical: 15,
+    backgroundColor: '#fff',
+    justifyContent: 'center'
+  },
+  button: {
+    flex: 0,
+    alignItems: 'center',
+    position: 'absolute',
+    left: 10
+  },
+  buttonText: { 
+    fontSize: 18, 
+  },
+  title: { 
+    fontSize: 18, 
+    fontWeight: 'bold',
+    color: '#6C63FF',
+  }
+})
