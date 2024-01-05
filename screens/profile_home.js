@@ -10,6 +10,32 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import getUser from '../utils/logins';
 import * as ImagePicker from 'expo-image-picker';
+import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
+
+const uploadImageToFirebaseStorage = async (fileUri, userId) => {
+  const storage = getStorage(app);
+  const storageRef = ref(storage, `profileImages/${userId}/image.jpg`);
+
+  try {
+    await uploadString(storageRef, fileUri, 'data_url');
+
+    // Get the download URL of the uploaded file
+    const downloadURL = await getDownloadURL(storageRef);
+
+    // Use the downloadURL as needed (e.g., save it to a user's profile in Firestore)
+    console.log('Download URL:', downloadURL);
+
+    return downloadURL;
+  } catch (error) {
+    console.error('Error uploading image to Firebase Storage:', error.message);
+    throw error;
+  }
+};
+
+const handleSignOut = async () => {
+    socket.disconnect();
+    await signOut(auth);
+}
 
 export default function ProfileHome() {
     const navigation = useNavigation();
@@ -21,10 +47,7 @@ export default function ProfileHome() {
         uid: '',
         username: ''
     });
-    const handleSignOut = async () => {
-        socket.disconnect();
-        await signOut(auth);
-    }
+
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
           allowsEditing: true,
@@ -32,9 +55,11 @@ export default function ProfileHome() {
         });
     
         if (!result.canceled) {
-          console.log(result.assets[0].uri);
+            const imgUri = result.assets[0].uri
+            await uploadImageToFirebaseStorage(imgUri, userId);
         } 
     };
+    
     useEffect(() => {
         const fetchData = async () => {
             onAuthStateChanged(auth, async (user) => {
