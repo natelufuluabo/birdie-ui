@@ -8,7 +8,7 @@ import CustomHeader from '../components/CustomHeader';
 import default_img from '../assets/profile_default.webp';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import getUser from '../utils/logins';
+import getUser, { updateUserInFirebaseDatabase } from '../utils/logins';
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
 import * as FileSystem from 'expo-file-system';
@@ -35,19 +35,11 @@ const uploadImageToFirebaseStorage = async (fileUri, userId) => {
     // Get the download URL of the uploaded file
     const downloadURL = await getDownloadURL(storageRef);
 
-    // Use the downloadURL as needed (e.g., save it to a user's profile in Firestore)
-    console.log('Download URL:', downloadURL);
-
-    // return downloadURL;
+    return downloadURL;
   } catch (error) {
     console.error('Error uploading image to Firebase Storage:', error.message);
   }
 };
-
-const handleSignOut = async () => {
-    socket.disconnect();
-    await signOut(auth);
-}
 
 export default function ProfileHome() {
     const navigation = useNavigation();
@@ -57,8 +49,15 @@ export default function ProfileHome() {
         email: '',
         sex: '',
         uid: '',
-        username: ''
+        username: '',
+        profilePicLink: '',
+        id: ''
     });
+
+    const handleSignOut = async () => {
+        socket.disconnect();
+        await signOut(auth);
+    }
 
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -68,7 +67,10 @@ export default function ProfileHome() {
     
         if (!result.canceled) {
             const imgUri = result.assets[0].uri
-            await uploadImageToFirebaseStorage(imgUri, userId);
+            const photoLink = await uploadImageToFirebaseStorage(imgUri, userId);
+            const updatedUserData = { ...userData, profilePicLink: photoLink };
+            const newUserData = await updateUserInFirebaseDatabase(userData.id, updatedUserData);
+            setUserData(newUserData);
         } 
     };
     
@@ -91,7 +93,7 @@ export default function ProfileHome() {
         <View style={styles.container}>
             <CustomHeader title='Profile' showBackButton={false} />
             <View style={styles.imageContainer}>
-                <Image source={default_img} style={styles.image} />
+                <Image source={userData.profilePicLink || default_img} style={styles.image} />
             </View>
             <View style={styles.headlineContainer}>
                 <Text style={styles.usernameText}>{userData.username}</Text>

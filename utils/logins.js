@@ -1,7 +1,7 @@
 import { validateEmail, validatePassword } from "./shared";
 import { app } from "./firebaseConfig";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, collection, doc, getDoc, getDocs, where, query } from "firebase/firestore";
+import { getFirestore, collection, updateDoc, getDocs, where, query, doc, getDoc } from "firebase/firestore";
 
 export const validateForm = (formData, setErrorsObject) => {
     const { email, password } = formData;
@@ -44,10 +44,38 @@ export default async function getUser(uid) {
     try {
         const querySnapshot = await getDocs(q);
         if (querySnapshot.size > 0) {
-            const userData = querySnapshot.docs[0].data();
+            const userData = { id: querySnapshot.docs[0].id , ...querySnapshot.docs[0].data()};
             return userData;
         }
     } catch (error) {
         console.log("Error checking user existence:", error);
     }
 }
+
+export const updateUserInFirebaseDatabase = async (userId, updatedUserData) => {
+    const firestore = getFirestore();
+    const userDocRef = doc(firestore, 'users', userId);
+
+    try {
+        // Get the current user data from Firestore
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+            const currentUserData = userDoc.data();
+
+            // Merge the updated data with the existing user data
+            const newUserData = { ...currentUserData, ...updatedUserData };
+
+            // Update the user in Firestore
+            await updateDoc(userDocRef, newUserData);
+            
+            return newUserData;
+        } else {
+            console.error('User not found in Firestore');
+            // throw new Error('User not found');
+        }
+    } catch (error) {
+        console.error('Error updating user in Firestore:', error.message);
+        throw error;
+    }
+};
