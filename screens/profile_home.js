@@ -11,13 +11,26 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import getUser from '../utils/logins';
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
+import * as FileSystem from 'expo-file-system';
+import { decode } from 'base-64';
+
+if(typeof atob === 'undefined') {
+  global.atob = decode;
+}
 
 const uploadImageToFirebaseStorage = async (fileUri, userId) => {
   const storage = getStorage(app);
   const storageRef = ref(storage, `profileImages/${userId}/image.jpg`);
 
   try {
-    await uploadString(storageRef, fileUri, 'data_url');
+    // Read the file as a base64-encoded string
+    const base64String = await FileSystem.readAsStringAsync(fileUri, { encoding: 'base64' });
+
+    // Create a data URL
+    const dataURL = `data:image/png;base64,${base64String}`;
+
+    // Upload the file to Firebase Storage
+    await uploadString(storageRef, dataURL, 'data_url');
 
     // Get the download URL of the uploaded file
     const downloadURL = await getDownloadURL(storageRef);
@@ -25,10 +38,9 @@ const uploadImageToFirebaseStorage = async (fileUri, userId) => {
     // Use the downloadURL as needed (e.g., save it to a user's profile in Firestore)
     console.log('Download URL:', downloadURL);
 
-    return downloadURL;
+    // return downloadURL;
   } catch (error) {
     console.error('Error uploading image to Firebase Storage:', error.message);
-    throw error;
   }
 };
 
