@@ -13,23 +13,32 @@ import getUser from '../utils/logins';
 export default function ProfileHome() {
     const navigation = useNavigation();
     const [userId, setUserId] = useState(null);
-    const [userData, setUserData] = useState(null);
+    const [userData, setUserData] = useState({
+        email: '',
+        sex: '',
+        uid: '',
+        username: ''
+    });
     const auth = getAuth(app);
     const handleSignOut = async () => {
         socket.disconnect();
         await signOut(auth);
     }
-    async function fetchUserData() {
-        setUserData(await getUser(userId));
-    }
     useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) setUserId(user.uid);
-            else navigation.navigate('login');
-        });
-        fetchUserData();
-        console.log(userData)
-    }, [userId]);
+        const fetchData = async () => {
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    setUserId(user.uid);
+                    const response = await getUser(user.uid);
+                    setUserData(response);
+                } else {
+                    navigation.navigate('login');
+                }
+            });
+        };
+
+        fetchData();
+    }, [userId, navigation, auth]);
     return (
         <View style={styles.container}>
             <CustomHeader title='Profile' showBackButton={false} />

@@ -39,7 +39,6 @@ export const loginUser = async(email, password) => {
 }
 
 export default async function getUser(uid) {
-    console.log(uid);
     const db = getFirestore(app);
     const q = query(collection(db, "users"), where("uid", "==", uid));
     try {
