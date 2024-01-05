@@ -9,9 +9,11 @@ import default_img from '../assets/profile_default.webp';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import getUser from '../utils/logins';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function ProfileHome() {
     const navigation = useNavigation();
+    const auth = getAuth(app);
     const [userId, setUserId] = useState(null);
     const [userData, setUserData] = useState({
         email: '',
@@ -19,11 +21,20 @@ export default function ProfileHome() {
         uid: '',
         username: ''
     });
-    const auth = getAuth(app);
     const handleSignOut = async () => {
         socket.disconnect();
         await signOut(auth);
     }
+    const pickImageAsync = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          allowsEditing: true,
+          quality: 1,
+        });
+    
+        if (!result.canceled) {
+          console.log(result.assets[0].uri);
+        } 
+    };
     useEffect(() => {
         const fetchData = async () => {
             onAuthStateChanged(auth, async (user) => {
@@ -47,7 +58,7 @@ export default function ProfileHome() {
             </View>
             <View style={styles.headlineContainer}>
                 <Text style={styles.usernameText}>{userData.username}</Text>
-                <Pressable>
+                <Pressable onPress={pickImageAsync}>
                     <Text style={styles.editText}>Edit photo</Text>
                 </Pressable>
             </View>
