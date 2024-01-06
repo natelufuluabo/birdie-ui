@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { StatusBar } from "expo-status-bar";
 import { 
-    StyleSheet, View, Text, Pressable, Image, SafeAreaView, 
+    StyleSheet, View, Text, Pressable, Image, SafeAreaView, ActivityIndicator,
     TextInput, TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard 
 } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -15,6 +15,7 @@ import socket from '../utils/socketService';
 
 export default function Login() {
     const navigation = useNavigation();
+    const [isLoading, setLoadingState] = useState(false);
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -24,9 +25,12 @@ export default function Login() {
         passwordError: ''
     });
     const passwordRef = useRef(null);
-    const handleSingIn = async () => {
-        // Implement your sigin logic here
-        if (!validateForm(formData, setErrorsObject)) return
+    const handleSignIn = async () => {
+        setLoadingState(true);
+        if (!validateForm(formData, setErrorsObject)) {
+            setLoadingState(false);
+            return
+        }
         const response = await loginUser(formData.email, formData.password);
         if (!response.ok) {
             setErrorsObject(prevState => ({ 
@@ -37,6 +41,7 @@ export default function Login() {
             setFormData(prevState => ({ 
                 ...prevState, password: '',
             }));
+            setLoadingState(false);
             return
         }
         setErrorsObject(prevState => ({ 
@@ -49,6 +54,7 @@ export default function Login() {
             if (user) {
                 socket.connect()
                 socket.emit('login', { userId: user.uid });
+                setLoadingState(false);
                 navigation.navigate('main');
             }
         });
@@ -94,7 +100,7 @@ export default function Login() {
                                         returnKeyType='next'
                                         returnKeyLabel='go'
                                         onSubmitEditing={async () => {
-                                            await handleSingIn();
+                                            await handleSignIn();
                                         }}
                                         blurOnSubmit={false}
                                         placeholder="Password"
@@ -106,8 +112,9 @@ export default function Login() {
                             </View>
                             <Text style={styles.errorText}>{errorsObject.passwordError}</Text>
                         </View>
-                            <Pressable style={styles.button} onPress={async () => await handleSingIn()}>
+                            <Pressable style={styles.button} onPress={async () => await handleSignIn()}>
                                 <Text style={styles.buttonText}>Sign In</Text>
+                                { isLoading && <ActivityIndicator size={24} color="#fff" /> }
                             </Pressable>
                             <View style={styles.textContainer2}>
                                 <Text>Need an account?</Text>
@@ -185,13 +192,15 @@ const styles = StyleSheet.create({
     },
     button: {
         display: 'flex',
+        flexDirection: 'row',
+        gap: 10,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#6C63FF',
         paddingVertical: 15,
         paddingHorizontal: 50,
         borderRadius: 20,
-        width: '70%',
+        width: '50%',
         alignSelf: 'center'
     },
     buttonText: {
