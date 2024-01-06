@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { 
-    StyleSheet, View, Text, Pressable, Image,
+    StyleSheet, View, Text, Pressable, Image, ActivityIndicator, 
     TextInput, TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard 
 } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -9,6 +9,7 @@ import imageSource from '../assets/signup.png';
 import { validateForm, createUser } from '../utils/signups';
 
 export default function SignUp({ setSignUpSuccessfull }) {
+    const [isLoading, setLoadingState] = useState(false);
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -24,10 +25,13 @@ export default function SignUp({ setSignUpSuccessfull }) {
     const passwordRef = useRef(null);
 
     const handleSignUp = async () => {
-        // Implement your signup logic here
-        // You can access the validated email, password, and username from state
-        if (!validateForm(formData, setErrorsObject)) return
+        setLoadingState(true);
+        if (!validateForm(formData, setErrorsObject)) {
+            setLoadingState(false);
+            return
+        }
         if (await createUser(formData, setErrorsObject, setFormData)) {
+            setLoadingState(false);
             setSignUpSuccessfull(prevState => (prevState = true));
         }
     };
@@ -109,6 +113,7 @@ export default function SignUp({ setSignUpSuccessfull }) {
                         </View>
                         <Pressable style={styles.button} onPress={async () => await handleSignUp()}>
                             <Text style={styles.buttonText}>Sign Up</Text>
+                            { isLoading && <ActivityIndicator size={24} color="#fff" /> }
                         </Pressable>
                     </View>
                 </TouchableWithoutFeedback>
@@ -194,13 +199,15 @@ const styles = StyleSheet.create({
     },
     button: {
         display: 'flex',
+        flexDirection: 'row',
+        gap: 10,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#6C63FF',
         paddingVertical: 15,
         paddingHorizontal: 50,
         borderRadius: 20,
-        width: '70%',
+        width: '55%',
         alignSelf: 'center'
     },
     buttonText: {
