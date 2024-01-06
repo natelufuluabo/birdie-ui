@@ -19,26 +19,27 @@ if(typeof atob === 'undefined') {
 }
 
 const uploadImageToFirebaseStorage = async (fileUri, userId) => {
-  const storage = getStorage(app);
-  const storageRef = ref(storage, `profileImages/${userId}/image.jpg`);
+    // const blob = new Blob
+    const storage = getStorage(app);
+    const storageRef = ref(storage, `profileImages/${userId}/image.png`);
 
-  try {
-    // Read the file as a base64-encoded string
-    const base64String = await FileSystem.readAsStringAsync(fileUri, { encoding: 'base64' });
+    try {
+        // Read the file as a base64-encoded string
+        const base64String = await FileSystem.readAsStringAsync(fileUri, { encoding: 'base64' });
 
-    // Create a data URL
-    const dataURL = `data:image/png;base64,${base64String}`;
+        // Create a data URL
+        const dataURL = `data:image/png;base64,${base64String}`;
 
-    // Upload the file to Firebase Storage
-    await uploadString(storageRef, dataURL, 'data_url');
+        // Upload the file to Firebase Storage
+        await uploadString(storageRef, dataURL, 'data_url');
 
-    // Get the download URL of the uploaded file
-    const downloadURL = await getDownloadURL(storageRef);
+        // Get the download URL of the uploaded file
+        const downloadURL = await getDownloadURL(storageRef);
 
-    return downloadURL;
-  } catch (error) {
-    console.error('Error uploading image to Firebase Storage:', error.message);
-  }
+        return downloadURL;
+    } catch (error) {
+        console.error('Error uploading image to Firebase Storage:', error.message);
+    }
 };
 
 export default function ProfileHome() {
