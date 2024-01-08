@@ -61,11 +61,14 @@ const styles = StyleSheet.create({
         paddingVertical: 7,
         paddingHorizontal: 15,
         backgroundColor: '#fff',
-        borderTopWidth: .5,
-        borderBottomWidth: .5
+        borderTopWidth: .2,
+        borderTopColor: '#7D7C7C',
+        borderBottomWidth: .2,
+        borderBottomColor: '#7D7C7C',
     },
     sectionTextContainer: {
-        fontSize: 16
+        fontSize: 16,
+        color: '#444'
     },
     saveText: {
         fontSize: 18,
