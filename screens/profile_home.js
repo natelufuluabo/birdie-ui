@@ -11,6 +11,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import getUser, { updateUserInFirebaseDatabase } from '../utils/logins';
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system';
 import { decode } from 'base-64';
 
@@ -57,6 +58,7 @@ export default function ProfileHome() {
 
     const handleSignOut = async () => {
         socket.disconnect();
+        await AsyncStorage.removeItem('userToken');
         await signOut(auth);
     }
 
