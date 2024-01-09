@@ -4,13 +4,16 @@ import { StyleSheet, Text, View, Image, Pressable } from 'react-native';
 import { Link } from 'expo-router';
 import imageSource from '../assets/homscreen.png';
 import { checkIfUserAuthenticated } from '../utils/logins';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Home() {
+  const navigation = useNavigation();
   useEffect(() => {
     const checkAuthentication = async () => {
       const isAuthenticated = await checkIfUserAuthenticated();
 
       if (isAuthenticated) {
+        navigation.navigate('main');
         console.log('User is authenticated');
       }
     };
