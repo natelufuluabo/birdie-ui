@@ -91,12 +91,17 @@ const storeUserToken = async (token) => {
     }
 };
 
-export const getUserToken = async () => {
+const getUserToken = async () => {
     try {
       const token = await AsyncStorage.getItem('userToken');
       return token;
     } catch (e) {
-      console.error('Error getting user token:', e);
+      console.log('Error getting user token:', e);
       return null;
     }
+};
+
+export const checkIfUserAuthenticated = async () => {
+    const userToken = await getUserToken();
+    return !!userToken;
 };
