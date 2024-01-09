@@ -14,7 +14,6 @@ export default function Home() {
 
       if (isAuthenticated) {
         navigation.navigate('main');
-        console.log('User is authenticated');
       }
     };
 

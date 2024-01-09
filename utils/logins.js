@@ -91,7 +91,7 @@ const storeUserToken = async (token) => {
     }
 };
 
-const getUserToken = async () => {
+export const getUserToken = async () => {
     try {
       const token = await AsyncStorage.getItem('userToken');
       return token;
