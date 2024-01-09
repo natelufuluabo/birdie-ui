@@ -1,9 +1,22 @@
+import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, Pressable } from 'react-native';
 import { Link } from 'expo-router';
 import imageSource from '../assets/homscreen.png';
+import { checkIfUserAuthenticated } from '../utils/logins';
 
 export default function Home() {
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      const isAuthenticated = await checkIfUserAuthenticated();
+
+      if (isAuthenticated) {
+        console.log('User is authenticated');
+      }
+    };
+
+    checkAuthentication();
+  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
