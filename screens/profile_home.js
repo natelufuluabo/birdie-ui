@@ -44,8 +44,8 @@ const uploadImageToFirebaseStorage = async (fileUri, userId) => {
 
 export default function ProfileHome() {
     const navigation = useNavigation();
-    const auth = getAuth(app);
     const [userId, setUserId] = useState(null);
+    const auth = getAuth(app);
     const [userData, setUserData] = useState({
         email: '',
         sex: '',

@@ -2,6 +2,7 @@ import { validateEmail, validatePassword } from "./shared";
 import { app } from "./firebaseConfig";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, collection, updateDoc, getDocs, where, query, doc, getDoc } from "firebase/firestore";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const validateForm = (formData, setErrorsObject) => {
     const { email, password } = formData;
@@ -77,5 +78,13 @@ export const updateUserInFirebaseDatabase = async (userId, updatedUserData) => {
     } catch (error) {
         console.error('Error updating user in Firestore:', error.message);
         throw error;
+    }
+};
+
+const storeUserToken = async (token) => {
+    try {
+        await AsyncStorage.setItem('userToken', token);
+    } catch (e) {
+        console.log('Error storing user token:', e);
     }
 };
