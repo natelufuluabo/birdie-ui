@@ -58,9 +58,9 @@ export default function ProfileHome() {
     });
 
     const handleSignOut = async () => {
-        await AsyncStorage.removeItem('userToken');
         socket.disconnect();
         await signOut(auth);
+        await AsyncStorage.removeItem('userToken');
     }
 
     const pickImageAsync = async () => {
@@ -106,7 +106,7 @@ export default function ProfileHome() {
         <View style={styles.container}>
             <CustomHeader title='Profile' showBackButton={false} />
             <View style={styles.imageContainer}>
-                <Image source={userData.profilePicLink || default_img} style={styles.image} />
+                <Image source={{ uri: userData.profilePicLink || default_img }} style={styles.image} />
             </View>
             <View style={styles.headlineContainer}>
                 <Text style={styles.usernameText}>{userData.username}</Text>

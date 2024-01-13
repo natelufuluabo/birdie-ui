@@ -8,17 +8,17 @@ import { useNavigation } from '@react-navigation/native';
 
 export default function Home() {
   const navigation = useNavigation();
-  useEffect(() => {
-    const checkAuthentication = async () => {
-      const isAuthenticated = await checkIfUserAuthenticated();
+  // useEffect(() => {
+  //   const checkAuthentication = async () => {
+  //     const isAuthenticated = await checkIfUserAuthenticated();
 
-      if (isAuthenticated) {
-        navigation.navigate('main');
-      }
-    };
+  //     if (isAuthenticated) {
+  //       navigation.navigate('main'); 
+  //     }
+  //   };
 
-    checkAuthentication();
-  }, []);
+  //   checkAuthentication();
+  // }, []);
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>

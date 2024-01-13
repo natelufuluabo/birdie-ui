@@ -3,6 +3,7 @@ import { app } from "./firebaseConfig";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, collection, updateDoc, getDocs, where, query, doc, getDoc } from "firebase/firestore";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { REACT_APP_TOKEN_CREATION_ENDPOINT } from "@env";
 
 export const validateForm = (formData, setErrorsObject) => {
     const { email, password } = formData;
@@ -24,6 +25,26 @@ export const validateForm = (formData, setErrorsObject) => {
     return true;
 }
 
+export const createCustomToken = async (userId) => {
+    try {
+      const response = await fetch(REACT_APP_TOKEN_CREATION_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId
+        }),
+      });
+
+      const data = await response.json();
+
+      return data;
+    } catch (error) {
+      console.log('Error triggering Cloud Function:', error);
+    }
+};
+
 export const loginUser = async(email, password) => {
     const auth = getAuth(app);
     try {
@@ -33,9 +54,9 @@ export const loginUser = async(email, password) => {
             password
         );
 
-        await storeUserToken(userCredential.user.uid);
+        const response = { ok: true, uid: userCredential.user.uid };
 
-        return { ok: true, uid: userCredential.user.uid };
+        return response;
     } catch (error) {
         if (error.message === 'Firebase: Error (auth/invalid-credential).') return { ok: false, uid: undefined }; 
     }
@@ -83,7 +104,7 @@ export const updateUserInFirebaseDatabase = async (userId, updatedUserData) => {
     }
 };
 
-const storeUserToken = async (token) => {
+export const storeUserToken = async (token) => {
     try {
         await AsyncStorage.setItem('userToken', token);
     } catch (e) {
