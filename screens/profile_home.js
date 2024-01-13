@@ -12,7 +12,6 @@ import getUser, { updateUserInFirebaseDatabase } from '../utils/logins';
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { checkIfUserAuthenticated,  } from '../utils/logins';
 import * as FileSystem from 'expo-file-system';
 import { decode } from 'base-64';
 
@@ -58,9 +57,8 @@ export default function ProfileHome() {
     });
 
     const handleSignOut = async () => {
-        socket.disconnect();
-        await signOut(auth);
         await AsyncStorage.removeItem('userToken');
+        await signOut(auth);
     }
 
     const pickImageAsync = async () => {
@@ -80,24 +78,15 @@ export default function ProfileHome() {
     
     useEffect(() => {
         const fetchData = async () => {
-            const isAuthenticated = await checkIfUserAuthenticated();
-
-            if (isAuthenticated) {
-                const userToken = await AsyncStorage.getItem('userToken');
-                setUserId(userToken);
-                const response = await getUser(userToken);
-                setUserData(response);
-            } else {
-                onAuthStateChanged(auth, async (user) => {
-                    if (user) {
-                        setUserId(user.uid);
-                        const response = await getUser(user.uid);
-                        setUserData(response);
-                    } else {
-                        navigation.navigate('login');
-                    }
-                });
-            }
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    setUserId(user.uid);
+                    const response = await getUser(user.uid);
+                    setUserData(response);
+                } else {
+                    navigation.navigate('login');
+                }
+            });
         };
 
         fetchData();

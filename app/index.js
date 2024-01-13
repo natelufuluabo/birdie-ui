@@ -3,22 +3,30 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, Pressable } from 'react-native';
 import { Link } from 'expo-router';
 import imageSource from '../assets/homscreen.png';
-import { checkIfUserAuthenticated } from '../utils/logins';
+import { checkIfUserAuthenticated, getUserToken } from '../utils/logins';
 import { useNavigation } from '@react-navigation/native';
+import { app } from '../utils/firebaseConfig';
+import { getAuth, signInWithCustomToken } from 'firebase/auth';
 
 export default function Home() {
   const navigation = useNavigation();
-  // useEffect(() => {
-  //   const checkAuthentication = async () => {
-  //     const isAuthenticated = await checkIfUserAuthenticated();
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      const isAuthenticated = await checkIfUserAuthenticated();
+      const customToken = await getUserToken();
+      const auth = getAuth(app);
 
-  //     if (isAuthenticated) {
-  //       navigation.navigate('main'); 
-  //     }
-  //   };
+      if (isAuthenticated) {
+        const user = await signInWithCustomToken(auth, customToken); 
 
-  //   checkAuthentication();
-  // }, []);
+        if (user.user) {
+          navigation.navigate('main');
+        }
+      }
+    };
+
+    checkAuthentication();
+  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
