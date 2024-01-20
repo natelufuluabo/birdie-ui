@@ -10,7 +10,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import getUser, { updateUserInFirebaseDatabase } from '../utils/logins';
 import * as ImagePicker from 'expo-image-picker';
-import { getStorage, ref, uploadString, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
+import { getStorage, ref, getDownloadURL, uploadBytes } from 'firebase/storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system';
 import { decode } from 'base-64';
@@ -20,35 +20,18 @@ if(typeof atob === 'undefined') {
 }
 
 const uploadImageToFirebaseStorage = async (fileUri, userId) => {
-    const fetchResponse = await fetch(fileUri);
-    const theBlob = await fetchResponse.blob();
     const storage = getStorage(app);
     const storageRef = ref(storage, `profileImages/${userId}/image.png`);
 
     try {
-        const uploadTask = uploadBytesResumable(storageRef, theBlob);
-        return new Promise((resolve, reject) => {
-            uploadTask.on(
-                "state_changed",
-                (snapshot) => {
-                    const progress =
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                // onProgress && onProgress(progress);
-                },
-                (error) => {
-                    // Handle unsuccessful uploads
-                    console.log(error);
-                    reject(error);
-                },
-                async () => {
-                    const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
-                    resolve({
-                        downloadUrl,
-                        metadata: uploadTask.snapshot.metadata,
-                    });
-                }
-            );
-        });
+        const img = await fetch(fileUri);
+        const bytes = await img.blob();
+
+        const result = await uploadBytes(storageRef, bytes);
+
+        const downloadUrl = await getDownloadURL(result);
+
+        return downloadUrl;
     } catch (error) {
         console.error('Error uploading image to Firebase Storage:', error.message);
     }
@@ -74,13 +57,14 @@ export default function ProfileHome() {
 
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-          allowsEditing: true,
-          quality: 1,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            quality: 1,
         });
     
         if (!result.canceled) {
             const imgUri = result.assets[0].uri
-            const { downloadUrl } = await uploadImageToFirebaseStorage(imgUri, userId);
+            const downloadUrl = await uploadImageToFirebaseStorage(imgUri, userId);
             const updatedUserData = { ...userData, profilePicLink: downloadUrl };
             const newUserData = await updateUserInFirebaseDatabase(userData.id, updatedUserData);
             setUserData(newUserData);
