@@ -12,7 +12,6 @@ import getUser, { updateUserInFirebaseDatabase } from '../utils/logins';
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref, getDownloadURL, uploadBytes } from 'firebase/storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as FileSystem from 'expo-file-system';
 import { decode } from 'base-64';
 
 if(typeof atob === 'undefined') {
@@ -28,8 +27,7 @@ const uploadImageToFirebaseStorage = async (fileUri, userId) => {
         const bytes = await img.blob();
 
         const result = await uploadBytes(storageRef, bytes);
-
-        const downloadUrl = await getDownloadURL(result);
+        const downloadUrl = await getDownloadURL(result.ref);
 
         return downloadUrl;
     } catch (error) {
@@ -76,7 +74,7 @@ export default function ProfileHome() {
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
                     setUserId(user.uid);
-                    const response = await getUser(user.uid);
+                    const response = await getUser(userId);
                     setUserData(response);
                 } else {
                     navigation.navigate('login');
@@ -90,7 +88,7 @@ export default function ProfileHome() {
         <View style={styles.container}>
             <CustomHeader title='Profile' showBackButton={false} />
             <View style={styles.imageContainer}>
-                <Image source={{ uri: userData.profilePicLink || default_img }} style={styles.image} />
+                <Image source={userData.profilePicLink || default_img} style={styles.image} />
             </View>
             <View style={styles.headlineContainer}>
                 <Text style={styles.usernameText}>{userData.username}</Text>

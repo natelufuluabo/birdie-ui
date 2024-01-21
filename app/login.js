@@ -53,8 +53,8 @@ export default function Login() {
         const auth = getAuth(app);
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                const customToken = await createCustomToken(user.uid);
-                await storeUserToken(customToken.customToken);
+                // const customToken = await createCustomToken(user.uid);
+                // await storeUserToken(customToken.customToken);
                 setLoadingState(false);
                 navigation.navigate('main');
             }
