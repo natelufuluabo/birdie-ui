@@ -74,7 +74,7 @@ export default function ProfileHome() {
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
                     setUserId(user.uid);
-                    const response = await getUser(userId);
+                    const response = await getUser(user.uid);
                     setUserData(response);
                 } else {
                     navigation.navigate('login');
@@ -88,8 +88,7 @@ export default function ProfileHome() {
         <View style={styles.container}>
             <CustomHeader title='Profile' showBackButton={false} />
             <View style={styles.imageContainer}>
-                <Image source={userData.profilePicLink} style={styles.image} />
-                {/* <Image source={userData.profilePicLink || default_img} style={styles.image} /> */}
+                <Image source={{ uri: userData.profilePicLink || default_img }} style={styles.image} />
             </View>
             <View style={styles.headlineContainer}>
                 <Text style={styles.usernameText}>{userData.username}</Text>
@@ -132,17 +131,19 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         display: 'flex',
         flexDirection: 'column',
-        gap: 10,
+        gap: 20,
         alignItems: 'center',
         height: '100%'
     },
     imageContainer: {
-        borderRadius: 20
+        borderRadius: 200,
+        borderWidth: 2,
+        borderColor: '#6C63FF'
     },
     image: {
         height: 250,
         width: 250,
-        borderRadius: 200
+        borderRadius: 200,
     },
     headlineContainer :{
         display: 'flex',
