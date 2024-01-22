@@ -88,7 +88,8 @@ export default function ProfileHome() {
         <View style={styles.container}>
             <CustomHeader title='Profile' showBackButton={false} />
             <View style={styles.imageContainer}>
-                <Image source={userData.profilePicLink || default_img} style={styles.image} />
+                <Image source={userData.profilePicLink} style={styles.image} />
+                {/* <Image source={userData.profilePicLink || default_img} style={styles.image} /> */}
             </View>
             <View style={styles.headlineContainer}>
                 <Text style={styles.usernameText}>{userData.username}</Text>
