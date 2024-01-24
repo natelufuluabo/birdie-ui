@@ -12,7 +12,6 @@ import { validateForm, loginUser, createCustomToken, storeUserToken } from '../u
 import { app } from '../utils/firebaseConfig';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import socket from '../utils/socketService';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Login() {
     const navigation = useNavigation();
@@ -53,8 +52,8 @@ export default function Login() {
         const auth = getAuth(app);
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // const customToken = await createCustomToken(user.uid);
-                // await storeUserToken(customToken.customToken);
+                const customToken = await createCustomToken(user.uid);
+                await storeUserToken(customToken.customToken);
                 setLoadingState(false);
                 navigation.navigate('main');
             }

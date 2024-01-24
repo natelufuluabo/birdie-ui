@@ -27,7 +27,7 @@ export const validateForm = (formData, setErrorsObject) => {
 
 export const createCustomToken = async (userId) => {
     try {
-      const response = await fetch(REACT_APP_TOKEN_CREATION_ENDPOINT, {
+      const response = await fetch(`${REACT_APP_TOKEN_CREATION_ENDPOINT}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
