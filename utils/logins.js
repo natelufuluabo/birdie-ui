@@ -3,7 +3,7 @@ import { app } from "./firebaseConfig";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, collection, updateDoc, getDocs, where, query, doc, getDoc } from "firebase/firestore";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { REACT_APP_TOKEN_CREATION_ENDPOINT } from "@env";
+import { REACT_APP_SIGN_IN_TOKEN_CREATION_ENDPOINT } from "@env";
 
 export const validateForm = (formData, setErrorsObject) => {
     const { email, password } = formData;
@@ -27,7 +27,7 @@ export const validateForm = (formData, setErrorsObject) => {
 
 export const createCustomToken = async (userId) => {
     try {
-      const response = await fetch(`${REACT_APP_TOKEN_CREATION_ENDPOINT}`, {
+      const response = await fetch(`${REACT_APP_SIGN_IN_TOKEN_CREATION_ENDPOINT}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
