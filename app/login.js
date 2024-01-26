@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Link } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
 import imageSource from '../assets/login.png';
-import { validateForm, loginUser, createCustomToken, storeUserToken } from '../utils/logins';
+import { validateForm, loginUser, createSignInToken, storeUserToken } from '../utils/logins';
 import { app } from '../utils/firebaseConfig';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import socket from '../utils/socketService';
@@ -52,7 +52,7 @@ export default function Login() {
         const auth = getAuth(app);
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                const customToken = await createCustomToken(user.uid);
+                const customToken = await createSignInToken(user.uid);
                 await storeUserToken(customToken.customToken);
                 setLoadingState(false);
                 navigation.navigate('main');

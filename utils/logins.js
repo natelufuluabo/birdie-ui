@@ -25,7 +25,7 @@ export const validateForm = (formData, setErrorsObject) => {
     return true;
 }
 
-export const createCustomToken = async (userId) => {
+export const createSignInToken = async (userId) => {
     try {
       const response = await fetch(`${REACT_APP_SIGN_IN_TOKEN_CREATION_ENDPOINT}`, {
         method: 'POST',
