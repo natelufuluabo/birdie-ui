@@ -1,4 +1,4 @@
-import CustomHeader from '../../components/CustomHeader';
+import CustomHeader from '../../../components/CustomHeader';
 import { View, Text, StyleSheet } from 'react-native';
 
 export default function ProfileContactUs() {

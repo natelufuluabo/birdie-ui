@@ -2,8 +2,8 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Platform } from 'react-native';
 import { useRoute } from '@react-navigation/native';
-import Chats from './chats';
-import Profile from './profile';
+import Chats from './chats/chats';
+import Profile from './profile/profile';
 import TabBarIcon from '../../components/TabBarIcon';
 
 const Tab = createBottomTabNavigator();
