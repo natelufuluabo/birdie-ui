@@ -7,11 +7,11 @@ import ProfileContactUs from './profile_contactus';
 export default function Profile() {
     const Stack = createNativeStackNavigator();
     return (
-        <Stack.Navigator initialRouteName='Home' screenOptions={{ headerShown: false }}>
-            <Stack.Screen name='Home' component={ProfileHome} />
-            <Stack.Screen name='details' component={ProfileDetails} />
-            <Stack.Screen name='settings' component={ProfileSettings} />
-            <Stack.Screen name='contactus' component={ProfileContactUs} />
+        <Stack.Navigator initialRouteName='profileHome' screenOptions={{ headerShown: false }}>
+            <Stack.Screen name='profileHome' component={ProfileHome} />
+            <Stack.Screen name='profileDetails' component={ProfileDetails} />
+            <Stack.Screen name='profileSettings' component={ProfileSettings} />
+            <Stack.Screen name='profileContactus' component={ProfileContactUs} />
         </Stack.Navigator>
     );
 }

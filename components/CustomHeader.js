@@ -7,7 +7,7 @@ export default function CustomHeader({ title, showBackButton = true }) {
   const navigation = useNavigation();
 
   const handleBackPress = () => {
-    navigation.navigate('Home');
+    navigation.navigate('profileHome');
   };
 
   return (

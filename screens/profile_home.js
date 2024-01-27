@@ -97,21 +97,21 @@ export default function ProfileHome() {
                 </Pressable>
             </View>
             <View style={styles.navContainer}>
-                <Pressable style={styles.navItem} onPress={() => navigation.navigate('details')}>
+                <Pressable style={styles.navItem} onPress={() => navigation.navigate('profileDetails')}>
                     <View style={styles.navTextContainer}>
                         <FontAwesome name="user-circle" size={24} color="#6C63FF" />
                         <Text>Account Details</Text>
                     </View>
                     <Ionicons name="chevron-forward" size={18} color='#444' />
                 </Pressable>
-                <Pressable style={styles.navItem} onPress={() => navigation.navigate('settings')}>
+                <Pressable style={styles.navItem} onPress={() => navigation.navigate('profileSettings')}>
                     <View style={styles.navTextContainer}>
                         <FontAwesome name="cog" size={24} color="#6C63FF" />
                         <Text>Settings</Text>
                     </View>
                     <Ionicons name="chevron-forward" size={18} color='#444' />
                 </Pressable>
-                <Pressable style={styles.navItem} onPress={() => navigation.navigate('contactus')}>
+                <Pressable style={styles.navItem} onPress={() => navigation.navigate('profileContactus')}>
                     <View style={styles.navTextContainer}>
                         <FontAwesome name="phone" size={24} color="#6C63FF" />
                         <Text>Contact Us</Text>
