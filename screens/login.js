@@ -48,6 +48,11 @@ export default function Login() {
             emailError: '',
             passwordError: ''
         }));
+        setFormData(prevState => ({ 
+            ...prevState,
+            email: '',
+            password: ''
+        }));
         const auth = getAuth(app);
         onAuthStateChanged(auth, async (user) => {
             if (user) {

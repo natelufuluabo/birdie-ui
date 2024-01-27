@@ -3,7 +3,7 @@ import Home from '../screens/index';
 import Login from '../screens/login';
 import Signup from '../screens/signup';
 import Confirmation from '../screens/confirmation';
-import Main from '../screens/main';
+import Main from '../screens/protectedScreens/main';
 
 export default function App() {
     const Stack = createNativeStackNavigator();

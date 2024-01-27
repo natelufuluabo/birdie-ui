@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import CustomHeader from '../components/CustomHeader';
+import CustomHeader from '../../components/CustomHeader';
 import { View, Text, Pressable, Switch, StyleSheet } from 'react-native'; 
 
 export default function ProfileSettings() {
