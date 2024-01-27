@@ -4,11 +4,12 @@ import {
     TextInput, TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard 
 } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Link } from 'expo-router';
 import imageSource from '../assets/signup.png';
+import { useNavigation } from '@react-navigation/native';
 import { validateForm, createUser } from '../utils/signups';
 
 export default function SignUp({ setSignUpSuccessfull }) {
+    const navigation = useNavigation();
     const [isLoading, setLoadingState] = useState(false);
     const [formData, setFormData] = useState({
         email: '',
@@ -120,9 +121,9 @@ export default function SignUp({ setSignUpSuccessfull }) {
             </KeyboardAvoidingView>
             <View style={styles.textContainer2}>
                 <Text>Already have an account?</Text>
-                <Link href='/login' asChild>
+                <Pressable onPress={() => navigation.navigate('login')}>
                     <Text style={styles.linkText}>Sign in</Text>
-                </Link>
+                </Pressable>
             </View>
         </View>
     );
