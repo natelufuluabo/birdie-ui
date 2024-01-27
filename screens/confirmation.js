@@ -2,12 +2,8 @@ import { StyleSheet, View, Text, Image,Pressable } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import imageSource from '../assets/successImg.png';
 
-export default function ConfirmationSignUp({ setSignUpSuccessfull }) {
+export default function Confirmation() {
     const navigation = useNavigation();
-    const handleButtonClick = () => {
-        setSignUpSuccessfull(false);
-        navigation.navigate('login');
-    }
     return (
         <View style={styles.container}>
             <View style={styles.imageContainer}>
@@ -17,7 +13,7 @@ export default function ConfirmationSignUp({ setSignUpSuccessfull }) {
                 <Text style={styles.title}>Registration successful!</Text>
                 <Text style={styles.paragraph}>We're thrilled to welcome you to our messaging community! Thank you for creating an account and initiating your journey toward connecting and communicating through our app.</Text>
             </View>
-            <Pressable style={styles.button} onPress={handleButtonClick}>
+            <Pressable style={styles.button} onPress={() => navigation.navigate('login')}>
                 <Text style={styles.buttonText}>Continue</Text>
             </Pressable>
         </View>
