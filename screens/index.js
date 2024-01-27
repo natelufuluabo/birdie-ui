@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, Pressable } from 'react-native';
-import { Link } from 'expo-router';
 import imageSource from '../assets/homscreen.png';
 import { checkIfUserAuthenticated, getUserToken } from '../utils/logins';
 import { useNavigation } from '@react-navigation/native';
@@ -38,11 +37,9 @@ export default function Home() {
           & chat with them anytime, anywhere!
         </Text>
       </View>
-      <Link href='/signup' style={StyleSheet.buttonContainer} asChild>
-        <Pressable style={styles.button}>
-          <Text style={styles.buttonText}>Get Started</Text>
-        </Pressable>
-      </Link>
+      <Pressable style={styles.button} onPress={() => navigation.navigate('login')}>
+        <Text style={styles.buttonText}>Get Started</Text>
+      </Pressable>
       <StatusBar style="auto" />
     </View>
   );
