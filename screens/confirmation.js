@@ -28,7 +28,8 @@ const styles = StyleSheet.create({
         height: '100%',
         gap: 20,
         paddingHorizontal: 20,
-        paddingTop: 40
+        paddingTop: 40,
+        backgroundColor: '#fff'
     },
     image: {
         height: 400,
