@@ -5,7 +5,6 @@ import {
     TextInput, TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard 
 } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Link } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
 import imageSource from '../assets/login.png';
 import { validateForm, loginUser, createSignInToken, storeUserToken } from '../utils/logins';
@@ -118,9 +117,9 @@ export default function Login() {
                             </Pressable>
                             <View style={styles.textContainer2}>
                                 <Text>Need an account?</Text>
-                                <Link href='/signup' asChild>
+                                <Pressable  onPress={() => navigation.navigate('signup')}>
                                     <Text style={styles.linkText}>Sign up</Text>
-                                </Link>
+                                </Pressable>
                             </View>
                         </View>
                     </TouchableWithoutFeedback>
