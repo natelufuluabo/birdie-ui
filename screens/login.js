@@ -31,28 +31,39 @@ export default function Login() {
             return
         }
         const response = await loginUser(formData.email, formData.password);
-        if (!response.ok) {
+        if (response) {
+            if (!response.ok) {
+                setErrorsObject(prevState => ({ 
+                    ...prevState,
+                    emailError: '',
+                    passwordError: 'invalid credentials'
+                }));
+                setFormData(prevState => ({ 
+                    ...prevState, password: '',
+                }));
+                setLoadingState(false);
+                return
+            } else {
+                setErrorsObject(prevState => ({ 
+                    ...prevState,
+                    emailError: '',
+                    passwordError: ''
+                }));
+                setFormData(prevState => ({ 
+                    ...prevState,
+                    email: '',
+                    password: ''
+                }));
+            }
+        } else {
+            setLoadingState(false);
             setErrorsObject(prevState => ({ 
                 ...prevState,
                 emailError: '',
-                passwordError: 'invalid credentials'
+                passwordError: 'Server Error. Retry.'
             }));
-            setFormData(prevState => ({ 
-                ...prevState, password: '',
-            }));
-            setLoadingState(false);
-            return
         }
-        setErrorsObject(prevState => ({ 
-            ...prevState,
-            emailError: '',
-            passwordError: ''
-        }));
-        setFormData(prevState => ({ 
-            ...prevState,
-            email: '',
-            password: ''
-        }));
+        
         const auth = getAuth(app);
         onAuthStateChanged(auth, async (user) => {
             if (user) {
