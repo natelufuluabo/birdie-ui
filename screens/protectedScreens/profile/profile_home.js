@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
         gap: 10
     },
     logoutText: {
-        fontSize: 18,
+        fontSize: 16,
         color: 'red',
         fontWeight: 'bold',
         marginTop: 20,

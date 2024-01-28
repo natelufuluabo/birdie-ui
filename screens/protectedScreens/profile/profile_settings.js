@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
         color: '#444'
     },
     saveText: {
-        fontSize: 18,
+        fontSize: 16,
         color: '#6C63FF',
         fontWeight: 'bold'
     },
