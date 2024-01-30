@@ -4,6 +4,7 @@ import { Platform } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import Chats from './chats/chats';
 import Profile from './profile/profile';
+import Friends from './friends/friends';
 import TabBarIcon from '../../components/TabBarIcon';
 
 const Tab = createBottomTabNavigator();
@@ -16,6 +17,8 @@ const getIconName = (routeName, focused) => {
     if (!focused && Platform.OS === 'android') return 'chat';
   } else if (routeName === 'profile') {
     return focused ? 'person' : 'person-outline';
+  } else if (routeName === 'friends') {
+    return focused ? 'people' : 'people-outline';
   }
 };
 
@@ -23,6 +26,8 @@ const getIconColor = (routeName, focused) => {
   if (routeName === 'chats') {
     return focused ? '#6C63FF' : '';
   } else if (routeName === 'profile') {
+    return focused ? '#6C63FF' : '';
+  } else if (routeName === 'friends') {
     return focused ? '#6C63FF' : '';
   }
 }
@@ -42,6 +47,19 @@ export default function Main() {
       <Tab.Screen
         name='chats'
         component={Chats}
+        options={({ route }) => ({
+          tabBarIcon: ({ color, size, focused }) => (
+            <TabBarIcon
+              name={getIconName(route.name, focused)}
+              size={size}
+              color={getIconColor(route.name, focused)}
+            />
+          ),
+        })}
+      />
+      <Tab.Screen
+        name='friends'
+        component={Friends}
         options={({ route }) => ({
           tabBarIcon: ({ color, size, focused }) => (
             <TabBarIcon
