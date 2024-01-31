@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import CustomHeader from '../../../components/CustomHeader';
 import { app } from '../../../utils/firebaseConfig';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { View, Text, Pressable, StyleSheet } from 'react-native'; 
+import { View, Text, Pressable, StyleSheet, Alert } from 'react-native'; 
 import getUser, { updateUserInFirebaseDatabase } from '../../../utils/logins';
 
 export default function ProfileDetails() {
@@ -11,6 +11,26 @@ export default function ProfileDetails() {
         email: '',
         username: '',
     });
+    const deleteAccount = () => {
+        console.log('account deleted!');
+    };
+    const showAlert = () => {
+        Alert.alert(
+            'Delete Account',
+            'This will permanently delete your account and all the data related to it. This action is irreversible. Do you want to proceed?',
+            [
+                {
+                    text: 'No',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Yes',
+                    onPress: () => deleteAccount(),
+                },
+            ],
+            { cancelable: false }
+        );
+    };
     useEffect(() => {
         const fetchData = async () => {
             onAuthStateChanged(auth, async (user) => {
@@ -40,7 +60,7 @@ export default function ProfileDetails() {
                     <Text style={styles.userDataText}>{userData.email}</Text>
                 </View>
             </View>
-            <Pressable style={styles.deleteButton}>
+            <Pressable style={styles.deleteButton} onPress={showAlert}>
                 <Text style={styles.deleteText}>Delete Account</Text>
             </Pressable>
         </View>
